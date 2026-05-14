@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Learning Modern</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+nav a.active,
+nav a:hover {
+    background: white;
+    color: #007bff;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    animation: fade 0.5s ease;
+}
+
+@keyframes fade {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* SCORE */
+#score {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+    nav {
+        flex-direction: column;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+    <a id="nav-dashboard" onclick="showPage('dashboard')">Dashboard</a>
+    <a id="nav-materi" onclick="showPage('materi')">Materi</a>
+    <a id="nav-login" onclick="showPage('login')">Login</a>
+</nav>
+
+<div class="container" id="content"></div>
+
+<script>
+
+// ================= NAV ACTIVE =================
+function setActive(id){
+    document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+    document.getElementById("nav-" + id).classList.add("active");
+}
+
+// ================= NAVIGATION =================
+function showPage(page) {
+    setActive(page);
+    const content = document.getElementById("content");
+
+    if (page === "dashboard") {
+        content.innerHTML = `
+        <div class="card">
+            <h2>🚀 Dashboard</h2>
+            <p>Selamat datang di media pembelajaran modern.</p>
+        </div>`;
+    }
+
+    if (page === "materi") {
+        content.innerHTML = `
+        <div class="card">
+            <h2>📘 Materi</h2>
+            <p>HTML adalah bahasa dasar untuk membuat website.</p>
+        </div>
+
+        <div class="card">
+            <h3>🧠 Kuis</h3>
+            <p>Apa kepanjangan HTML?</p>
+            <input type="text" id="jawaban" placeholder="Jawaban...">
+            <button onclick="cekJawaban()">Submit</button>
+            <button onclick="resetKuis()">Reset</button>
+            <p id="score"></p>
+        </div>`;
+    }
+
+    if (page === "login") {
+        content.innerHTML = `
+        <div class="card">
+            <h2>🔐 Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p id="msg"></p>
+        </div>
+
+        <div class="card">
+            <h2>📝 Register</h2>
+            <input type="text" id="reguser" placeholder="Username">
+            <input type="password" id="regpass" placeholder="Password">
+            <button onclick="register()">Register</button>
+            <p id="msg2"></p>
+        </div>`;
+    }
+}
+
+// ================= LOGIN =================
+function login() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if (user === "" || pass === "") {
+        document.getElementById("msg").innerHTML = "❌ Tidak boleh kosong!";
+    } else {
+        document.getElementById("msg").innerHTML = "✅ Login berhasil!";
+    }
+}
+
+// ================= REGISTER =================
+function register() {
+    let user = document.getElementById("reguser").value;
+    let pass = document.getElementById("regpass").value;
+
+    if (user === "" || pass === "") {
+        document.getElementById("msg2").innerHTML = "❌ Tidak boleh kosong!";
+    } else {
+        document.getElementById("msg2").innerHTML = "✅ Register berhasil!";
+    }
+}
+
+// ================= KUIS =================
+function cekJawaban() {
+    let jawaban = document.getElementById("jawaban").value.toLowerCase();
+
+    if (jawaban === "hypertext markup language") {
+        document.getElementById("score").innerHTML = "✅ Benar! Skor: 100";
+        document.getElementById("score").style.color = "green";
+    } else {
+        document.getElementById("score").innerHTML = "❌ Salah! Skor: 0";
+        document.getElementById("score").style.color = "red";
+    }
+}
+
+// ================= RESET =================
+function resetKuis() {
+    document.getElementById("jawaban").value = "";
+    document.getElementById("score").innerHTML = "";
+}
+
+// default
+showPage('dashboard');
+
+</script>
+
+</body>
+</html>

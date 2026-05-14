@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Pembelajaran Matematika</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  min-height:100vh;
+}
+
+/* ===== HEADER ===== */
+header{
+  background:#0f2027;
+  color:white;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+}
+
+.reset-btn{
+  background:#c0392b;
+  margin-top:8px;
+}
+
+.reset-btn:hover{
+  background:#e74c3c;
+}
+
+.menu-toggle{
+  display:none;
+  font-size:26px;
+  cursor:pointer;
+  color:white;
+}
+
+
+.logo{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.menu-toggle{
+  display:none;
+  font-size:24px;
+  cursor:pointer;
+}
+
+nav{
+  display:flex;
+}
+
+nav ul{
+  list-style:none;
+  display:flex;
+  gap:20px;
+}
+
+nav ul li{
+  position:relative;
+}
+
+.dropbtn{
+  background:none;
+  border:none;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  background-color: #1e3c72;
+}
+
+/* Dropdown */
+.dropdown-content{
+  display:none;
+  position:absolute;
+  top:35px;
+  right:0;
+  background:white;
+  min-width:180px;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+  z-index:100;
+}
+
+.dropdown-content a{
+  display:block;
+  padding:10px;
+  color:black;
+  text-decoration:none;
+}
+
+.dropdown-content a:hover{
+  background:#f1f1f1;
+}
+
+/* 🔥 Hover hanya untuk desktop */
+@media (min-width:769px){
+  .dropdown:hover .dropdown-content{
+    display:block;
+  }
+}
+
+.show{
+  display:block;
+}
+
+/* ===== DASHBOARD ===== */
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:40px 15px;
+}
+
+
+.card{
+  background:white;
+  width:100%;
+  max-width:500px;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  text-align:center;
+}
+
+.card h1{
+  margin-bottom:20px;
+  color:#1e3c72;
+}
+
+select,input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#1e3c72;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#2a5298;
+}
+
+#hasil{
+  margin-top:15px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+/* Hover hanya untuk layar besar */
+@media (min-width: 769px){
+  .dropdown:hover .dropdown-content{
+    display:block;
+  }
+}
+
+/* Default sembunyikan */
+.dropdown-content{
+  display:none;
+}
+
+/* Class aktif untuk mobile */
+.dropdown-content.show{
+  display:block;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+
+  header{
+    flex-wrap:wrap;
+  }
+
+  .menu-toggle{
+    display:flex;
+    margin-left:auto;
+    /* padding-top: 60px; */
+  }
+
+.logo{
+    display: flex;
+    margin-right: auto;
+}
+
+.anjay{
+    display: flex;
+}
+
+  nav{
+    display:none;
+    width:100%;
+    margin-top:15px;
+  }
+
+  nav.active{
+    display:block;
+  }
+
+  nav ul{
+    flex-direction:column;
+    width:100%;
+    gap:15px;
+  }
+
+  nav ul li{
+    width:100%;
+  }
+
+  .dropbtn{
+    width:100%;
+    text-align:left;
+    padding:10px 0;
+    padding-left: 15px;
+  }
+
+  .dropdown-content{
+    position:relative;
+    top:0;
+    right:0;
+    width:100%;
+    box-shadow:none;
+    border-radius:6px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+ <header>
+  <div class="logo">📘 E-Learning</div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+  <nav id="navbar">
+    <ul>
+<li class="dropdown">
+  <button class="dropbtn" onclick="toggleDropdown(this)">
+    Media Hitung ▾
+  </button>
+  <div class="dropdown-content">
+    <a href="#">Volume Kubus</a>
+    <a href="#">Keliling Bangun Datar</a>
+  </div>
+</li>
+
+<li class="dropdown">
+  <button class="dropbtn" onclick="toggleDropdown(this)">
+    Akun ▾
+  </button>
+  <div class="dropdown-content">
+    <a href="#">Register</a>
+    <a href="#">Login</a>
+    <a href="#">Logout</a>
+  </div>
+</li>
+    </ul>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h1>📐 Hitung Matematika</h1>
+
+    <select id="materi">
+      <option value="pp">Luas Persegi Panjang</option>
+      <option value="segitiga">Luas Segitiga</option>
+      <option value="lingkaran">Luas Lingkaran</option>
+      <option value="kubus">Volume Kubus</option>
+      <option value="keliling">Keliling Persegi</option>
+    </select>
+
+    <input type="number" id="nilai1" placeholder="Nilai 1">
+    <input type="number" id="nilai2" placeholder="Nilai 2 (opsional)">
+
+    <button onclick="prosesHitung()">Hitung</button>
+    <button onclick="resetForm()" class="reset-btn">Reset</button>
+
+    <h2 id="hasil"></h2>
+  </div>
+</div>
+<script>
+
+    function toggleDropdown(button){
+  // cek kalau layar kecil (mobile)
+  if(window.innerWidth <= 768){
+    const dropdown = button.nextElementSibling;
+    dropdown.classList.toggle("show");
+  }
+}
+    
+// script button reset
+function resetForm(){
+  document.getElementById("materi").selectedIndex = 0;
+  document.getElementById("nilai1").value = "";
+  document.getElementById("nilai2").value = "";
+  document.getElementById("hasil").innerText = "";
+}
+
+function toggleMenu(){
+  document.getElementById("navbar").classList.toggle("active");
+}
+
+
+// Rumus
+const luasPersegiPanjang = (p,l)=>p*l;
+const luasSegitiga = (a,t)=>0.5*a*t;
+const luasLingkaran = r=>3.14*r*r;
+const volumeKubus = s=>s*s*s;
+const kelilingPersegi = s=>4*s;
+
+function tampilkanHasil(nilai){
+  let pesan = nilai > 100 ? " (Hasil Besar)" : " (Hasil Kecil)";
+  document.getElementById("hasil").innerText =
+    "Hasil Perhitungan: "+nilai+pesan;
+}
+
+function prosesHitung(){
+  const materi=document.getElementById("materi").value;
+  const n1=parseFloat(document.getElementById("nilai1").value);
+  const n2=parseFloat(document.getElementById("nilai2").value);
+
+  if(isNaN(n1)){
+    alert("Nilai belum diisi!");
+    return;
+  }
+
+  let hasil=0;
+
+  if(materi==="pp") hasil=luasPersegiPanjang(n1,n2);
+  else if(materi==="segitiga") hasil=luasSegitiga(n1,n2);
+  else if(materi==="lingkaran") hasil=luasLingkaran(n1);
+  else if(materi==="kubus") hasil=volumeKubus(n1);
+  else if(materi==="keliling") hasil=kelilingPersegi(n1);
+
+  tampilkanHasil(hasil);
+}
+</script>
+
+</body>
+</html>

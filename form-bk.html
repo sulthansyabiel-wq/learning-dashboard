@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Laporan BK</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 6px;
+      text-align: center;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .ttd {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ttd div {
+      width: 45%;
+      text-align: center;
+    }
+    @media print {
+      button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h2>III. REKAPITULASI KEGIATAN LAYANAN BK</h2>
+<table id="rekapKegiatan">
+  <tr>
+    <th>No</th>
+    <th>Jenis Layanan</th>
+    <th>Sasaran Kelas</th>
+    <th>Jumlah Siswa</th>
+    <th>Waktu</th>
+    <th>Bentuk Kegiatan</th>
+    <th>Keterangan</th>
+  </tr>
+</table>
+<button onclick="tambahRekap()">+ Tambah Baris</button>
+
+<h2>IV. REKAP PERMASALAHAN PESERTA DIDIK</h2>
+<table id="rekapMasalah">
+  <tr>
+    <th>No</th>
+    <th>Bidang</th>
+    <th>Permasalahan</th>
+    <th>Jumlah Siswa</th>
+    <th>Tindak Awal</th>
+  </tr>
+</table>
+<button onclick="tambahMasalah()">+ Tambah Baris</button>
+
+<h2>V. TINDAK LANJUT</h2>
+<table id="tindakLanjut">
+  <tr>
+    <th>No</th>
+    <th>Permasalahan</th>
+    <th>Layanan BK</th>
+    <th>Tindak Lanjut</th>
+    <th>Waktu</th>
+    <th>Pihak Terkait</th>
+  </tr>
+</table>
+<button onclick="tambahTindak()">+ Tambah Baris</button>
+
+<h2>LAMPIRAN DOKUMENTASI</h2>
+<p>Maksimal 12 foto (maks 2 MB per foto)</p>
+<input type="file" accept="image/*" multiple>
+
+<div class="ttd">
+  <div>
+    Mengetahui,<br>
+    Koordinator BK<br><br><br>
+    <select>
+      <option>Pilih Nama Guru</option>
+      <option>Fahrunazi, S.Pd</option>
+      <option>Dian Riyani, S.Pd</option>
+    </select><br>
+    NIP: <input type="text">
+  </div>
+
+  <div>
+    Guru BK / Konselor<br><br><br><br>
+    <select>
+      <option>Pilih Nama Guru</option>
+      <option>Fahrunazi, S.Pd</option>
+      <option>Dian Riyani, S.Pd</option>
+    </select><br>
+    NIP: <input type="text">
+  </div>
+</div>
+
+<br><br>
+<center>
+  <button onclick="window.print()">📄 Ekspor ke PDF</button>
+</center>
+
+<script>
+function tambahRekap() {
+  let table = document.getElementById("rekapKegiatan");
+  let row = table.insertRow();
+  row.innerHTML = `
+    <td>${table.rows.length - 1}</td>
+    <td><input type="text"></td>
+    <td>
+      <select>
+        <option>X TJKT A</option>
+        <option>X TJKT B</option>
+        <option>XI TJKT A</option>
+        <option>XI TJKT B</option>
+        <option>XII TJKT A</option>
+        <option>XII TJKT B</option>
+      </select>
+    </td>
+    <td><input type="number"></td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+  `;
+}
+
+function tambahMasalah() {
+  let table = document.getElementById("rekapMasalah");
+  let row = table.insertRow();
+  row.innerHTML = `
+    <td>${table.rows.length - 1}</td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td><input type="number"></td>
+    <td><input type="text"></td>
+  `;
+}
+
+function tambahTindak() {
+  let table = document.getElementById("tindakLanjut");
+  let row = table.insertRow();
+  row.innerHTML = `
+    <td>${table.rows.length - 1}</td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+  `;
+}
+</script>
+
+</body>
+</html>

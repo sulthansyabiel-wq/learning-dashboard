@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Gramme — Order</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Playfair Display', 'serif'],
+        body: ['Outfit', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { width:100%; height:100%; overflow:hidden; background:#0f0d0c; font-family:'Outfit',sans-serif; }
+.phone { width:100%; max-width:390px; height:100dvh; margin:0 auto; background:#FAF7F2; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.page { display:none; flex-direction:column; height:100%; overflow:hidden; }
+.page.active { display:flex; }
+.scroll-area { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.scroll-area::-webkit-scrollbar { display:none; }
+.tabs-bar { display:flex; overflow-x:auto; scrollbar-width:none; }
+.tabs-bar::-webkit-scrollbar { display:none; }
+.tab-btn { flex-shrink:0; padding:10px 16px; font-size:11px; font-weight:600; letter-spacing:0.06em; color:rgba(240,232,220,0.38); background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; text-transform:uppercase; font-family:'Outfit',sans-serif; }
+.tab-btn.active { color:#F0E8DC; border-bottom-color:#C4855A; }
+.cart-panel { max-height:0; overflow:hidden; transition:max-height 0.38s cubic-bezier(0.32,0.72,0,1); background:#292524; }
+.cart-panel.open { max-height:340px; overflow-y:auto; scrollbar-width:none; }
+.cart-panel::-webkit-scrollbar { display:none; }
+.cart-bar-wrap { position:absolute; bottom:0; left:0; right:0; z-index:50; transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); }
+.cart-bar-wrap.hidden { transform:translateY(100%); }
+.pay-opt { cursor:pointer; transition:all 0.15s; border:1.5px solid rgba(120,80,58,0.15); border-radius:16px; padding:16px 12px; text-align:center; background:#fff; }
+.pay-opt.sel { border-color:#78503A; background:#F0E8DC; }
+.sec-hd { font-family:'Playfair Display',serif; font-style:italic; font-size:18px; color:#1C1917; padding:22px 20px 10px; display:flex; align-items:center; gap:10px; }
+.sec-hd::after { content:''; flex:1; height:1px; background:rgba(120,80,58,0.12); }
+.menu-list { padding:0 14px; display:flex; flex-direction:column; gap:9px; }
+.mcard { background:#fff; border-radius:16px; border:1px solid rgba(120,80,58,0.1); display:flex; align-items:center; gap:12px; padding:13px 13px 13px 14px; transition:transform 0.12s; }
+.mcard:active { transform:scale(0.985); }
+.micon { width:62px; height:62px; border-radius:12px; background:#FAF7F2; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:25px; }
+.minfo { flex:1; min-width:0; }
+.mname { font-size:14px; font-weight:600; color:#1C1917; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'Outfit',sans-serif; }
+.mdesc { font-size:11px; color:#9C8878; line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:5px; font-family:'Outfit',sans-serif; }
+.mprice { font-size:13px; font-weight:700; color:#78503A; font-family:'Outfit',sans-serif; }
+.qty-wrap { flex-shrink:0; }
+.btn-add { width:34px; height:34px; border-radius:50%; background:#1C1917; color:#F0E8DC; border:none; font-size:21px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.15s,transform 0.1s; font-family:'Outfit',sans-serif; line-height:1; }
+.btn-add.has-items { background:#78503A; }
+.btn-add:active { transform:scale(0.86); }
+.qty-ctrl { display:flex; align-items:center; gap:6px; }
+.btn-sub { width:28px; height:28px; border-radius:50%; background:#F0E8DC; border:none; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#1C1917; font-family:'Outfit',sans-serif; }
+.qty-n { font-size:14px; font-weight:700; min-width:18px; text-align:center; color:#1C1917; font-family:'Outfit',sans-serif; }
+.citem { display:flex; align-items:center; gap:10px; padding:11px 18px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.citem-name { flex:1; font-size:13px; color:#F0E8DC; font-weight:500; font-family:'Outfit',sans-serif; }
+.citem-ctrl { display:flex; align-items:center; gap:8px; }
+.citem-btn { width:26px; height:26px; border-radius:50%; border:1px solid rgba(240,232,220,0.2); background:none; color:#F0E8DC; font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:'Outfit',sans-serif; }
+.citem-n { font-size:13px; font-weight:700; color:#F0E8DC; min-width:16px; text-align:center; font-family:'Outfit',sans-serif; }
+.citem-price { font-size:12px; color:#C4855A; font-weight:700; min-width:62px; text-align:right; font-family:'Outfit',sans-serif; }
+.o-row { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; border-bottom:1px solid rgba(120,80,58,0.09); font-size:13px; font-family:'Outfit',sans-serif; }
+.o-row:last-child { border-bottom:none; }
+.o-name { color:#1C1917; font-weight:600; }
+.o-qty { font-size:11px; color:#9C8878; }
+.o-price { font-weight:700; color:#1C1917; }
+.o-total-row { display:flex; justify-content:space-between; align-items:center; padding:13px 16px; background:#F0E8DC; font-size:14px; font-weight:700; color:#1C1917; font-family:'Outfit',sans-serif; }
+#custName:focus,#custNote:focus { border-color:#A8704F !important; outline:none; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.7)} }
+.pulse { animation:pulse-dot 1.4s infinite; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+
+<div id="toast" class="absolute top-16 left-1/2 -translate-x-1/2 bg-stone-900 text-amber-50 px-4 py-2 rounded-full text-xs font-semibold opacity-0 pointer-events-none z-50 whitespace-nowrap transition-all duration-300" style="font-family:'Outfit',sans-serif;background:#1C1917;color:#F0E8DC;transform:translateX(-50%) translateY(-4px);"></div>
+
+<div class="page active" id="menuPage">
+  <div style="background:#1C1917;" class="flex-shrink-0">
+    <div class="flex justify-between items-center px-5 pt-4 pb-3">
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:#F0E8DC;letter-spacing:0.04em;">gramme</span>
+      <span style="background:#78503A;color:#F0E8DC;" class="text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-full font-body">Meja <span id="tblNum">1</span></span>
+    </div>
+    <div class="tabs-bar px-1">
+      <button class="tab-btn active" onclick="goTab(this,'s-main')">Main</button>
+      <button class="tab-btn" onclick="goTab(this,'s-rice')">Ricebowl</button>
+      <button class="tab-btn" onclick="goTab(this,'s-pasta')">Pasta</button>
+      <button class="tab-btn" onclick="goTab(this,'s-snack')">Snacks</button>
+      <button class="tab-btn" onclick="goTab(this,'s-dessert')">Dessert</button>
+      <button class="tab-btn" onclick="goTab(this,'s-coffee')">Coffee</button>
+      <button class="tab-btn" onclick="goTab(this,'s-noncoffee')">Non-Coffee</button>
+      <button class="tab-btn" onclick="goTab(this,'s-sig')">Signature</button>
+    </div>
+  </div>
+
+  <div class="scroll-area" id="menuScroll" style="padding-bottom:110px;">
+    <div style="background:linear-gradient(135deg,#1C1917 0%,#2e1f16 100%);" class="px-5 pt-6 pb-9 relative overflow-hidden">
+      <div class="absolute right-0 top-0 w-36 h-36 rounded-full" style="background:radial-gradient(circle,rgba(196,133,90,0.18),transparent);transform:translate(35%,-35%);"></div>
+      <div class="text-xs font-semibold tracking-widest uppercase mb-2 font-body" style="color:#C4855A;">Gramme Cafe</div>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:29px;color:#F0E8DC;line-height:1.18;">Savor The<br>Simplicity</div>
+      <div class="text-xs font-light mt-2.5 font-body" style="color:rgba(240,232,220,0.38);">Fresh menu, crafted daily for you ✦</div>
+    </div>
+
+    <div id="s-main"><div class="sec-hd">Main Course</div><div class="menu-list" id="ml-main"></div></div>
+    <div id="s-rice"><div class="sec-hd">Ricebowl</div><div class="menu-list" id="ml-rice"></div></div>
+    <div id="s-pasta"><div class="sec-hd">Pasta</div><div class="menu-list" id="ml-pasta"></div></div>
+    <div id="s-snack"><div class="sec-hd">Snacks & Platters</div><div class="menu-list" id="ml-snack"></div></div>
+    <div id="s-dessert"><div class="sec-hd">Desserts</div><div class="menu-list" id="ml-dessert"></div></div>
+    <div id="s-coffee"><div class="sec-hd">Coffee</div><div class="menu-list" id="ml-coffee"></div></div>
+    <div id="s-noncoffee"><div class="sec-hd">Non Coffee</div><div class="menu-list" id="ml-noncoffee"></div></div>
+    <div id="s-sig"><div class="sec-hd">Signature & Mocktails</div><div class="menu-list" id="ml-sig"></div></div>
+  </div>
+
+  <div class="cart-bar-wrap hidden" id="cartBarWrap">
+    <div style="background:#1C1917;border-radius:22px 22px 0 0;overflow:hidden;">
+      <div class="flex justify-center pt-2.5 pb-1 cursor-pointer" onclick="toggleCart()">
+        <div class="w-9 h-1 rounded-full" style="background:rgba(240,232,220,0.15);"></div>
+      </div>
+      <div class="cart-panel" id="cartPanel">
+        <div id="cartItemsList"></div>
+        <div class="flex justify-between items-center px-5 py-3" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <span class="text-xs font-body" style="color:rgba(240,232,220,0.4);">Total Pesanan</span>
+          <span class="text-base font-bold font-body" style="color:#F0E8DC;" id="cartTotalDrawer">Rp 0</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="toggleCart()">
+        <div class="flex items-center justify-center rounded-full text-white text-xs font-bold min-w-6 h-6 px-2 font-body flex-shrink-0" style="background:#C4855A;" id="cartBadge">0</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-xs font-body" style="color:rgba(240,232,220,0.4);" id="cartLabel">item dipilih</div>
+          <div class="text-base font-semibold font-body truncate" style="color:#F0E8DC;" id="cartTotalText">Rp 0</div>
+        </div>
+        <span id="cartArrow" class="text-xs font-semibold font-body rounded-full px-3 py-1.5 flex-shrink-0 transition-all" style="background:rgba(255,255,255,0.08);color:rgba(240,232,220,0.6);">Lihat Pesanan</span>
+        <button onclick="event.stopPropagation();goCheckout();" class="text-sm font-semibold rounded-xl px-4 py-2.5 font-body flex-shrink-0 transition-all active:opacity-80" style="background:#78503A;color:#F0E8DC;">Pesan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="ckPage">
+  <div style="background:#1C1917;" class="flex-shrink-0 px-5 pt-4 pb-6">
+    <button onclick="showPage('menuPage')" class="flex items-center gap-1.5 text-xs mb-4 font-body" style="background:none;border:none;color:rgba(240,232,220,0.45);cursor:pointer;padding:0;">← Kembali</button>
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:26px;color:#F0E8DC;line-height:1.2;">Konfirmasi<br>Pesanan</div>
+  </div>
+  <div class="scroll-area px-4 pt-4" style="padding-bottom:40px;">
+    <div class="text-xs font-semibold tracking-widest uppercase mb-3 font-body" style="color:#9C8878;">Ringkasan Pesanan</div>
+    <div id="ckSummary" class="rounded-2xl overflow-hidden mb-5" style="background:#fff;border:1px solid rgba(120,80,58,0.13);"></div>
+
+    <div class="text-xs font-semibold tracking-widest uppercase mb-3 font-body" style="color:#9C8878;">Data Pemesan</div>
+    <label class="block text-xs font-semibold tracking-wider uppercase mb-1.5 font-body" style="color:#9C8878;">Nama (opsional)</label>
+    <input id="custName" type="text" placeholder="Nama kamu..." class="w-full rounded-xl px-4 py-3 text-sm mb-4 font-body" style="background:#fff;border:1px solid rgba(120,80,58,0.13);color:#1C1917;font-family:'Outfit',sans-serif;outline:none;">
+    <label class="block text-xs font-semibold tracking-wider uppercase mb-1.5 font-body" style="color:#9C8878;">Catatan</label>
+    <textarea id="custNote" placeholder="Contoh: tidak pedas, less ice..." class="w-full rounded-xl px-4 py-3 text-sm mb-5 resize-none h-20 font-body" style="background:#fff;border:1px solid rgba(120,80,58,0.13);color:#1C1917;font-family:'Outfit',sans-serif;outline:none;"></textarea>
+
+    <div class="text-xs font-semibold tracking-widest uppercase mb-3 font-body" style="color:#9C8878;">Metode Pembayaran</div>
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="pay-opt sel" id="payQRIS" onclick="selPay('QRIS')">
+        <div class="text-2xl mb-1.5">📱</div>
+        <div class="text-sm font-semibold font-body" style="color:#1C1917;">QRIS</div>
+      </div>
+      <div class="pay-opt" id="payCash" onclick="selPay('Cash')">
+        <div class="text-2xl mb-1.5">💵</div>
+        <div class="text-sm font-semibold font-body" style="color:#1C1917;">Cash</div>
+      </div>
+    </div>
+
+    <button onclick="placeOrder()" class="w-full rounded-2xl py-4 text-base font-bold font-body active:opacity-80" style="background:#1C1917;color:#F0E8DC;border:none;cursor:pointer;">Pesan Sekarang</button>
+  </div>
+</div>
+
+<div class="page" id="sucPage">
+  <div class="scroll-area">
+    <div style="background:linear-gradient(160deg,#1C1917 0%,#2a1a10 60%,#1C1917 100%);" class="px-6 pt-10 pb-8 relative overflow-hidden">
+      <div class="absolute right-0 top-0 w-52 h-52 rounded-full" style="background:radial-gradient(circle,rgba(196,133,90,0.12),transparent);transform:translate(40%,-40%);"></div>
+      <div class="flex justify-center mb-5">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background:rgba(74,122,90,0.18);border:2px solid rgba(74,122,90,0.35);">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <path d="M7 16.5l6 6 12-12" stroke="#6bbf8a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="text-center mb-4">
+        <div class="text-xs font-semibold tracking-widest uppercase font-body mb-1.5" style="color:rgba(240,232,220,0.38);">Pesanan Diterima</div>
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:26px;color:#F0E8DC;line-height:1.2;">Terima Kasih!</div>
+      </div>
+      <div class="rounded-2xl overflow-hidden" style="background:rgba(255,255,255,0.06);border:1px solid rgba(240,232,220,0.1);">
+        <div class="px-5 pt-4 pb-3 text-center" style="border-bottom:1px solid rgba(240,232,220,0.08);">
+          <div class="text-xs font-body mb-1" style="color:rgba(240,232,220,0.4);">Nomor Order</div>
+          <div id="sOid" style="font-family:'Playfair Display',serif;font-size:42px;font-weight:600;color:#C4855A;letter-spacing:0.1em;line-height:1;">#A000</div>
+        </div>
+        <div class="grid grid-cols-2" style="border-bottom:1px solid rgba(240,232,220,0.08);">
+          <div class="px-5 py-3" style="border-right:1px solid rgba(240,232,220,0.08);">
+            <div class="text-xs font-body mb-0.5" style="color:rgba(240,232,220,0.4);">Total</div>
+            <div id="sTotal" class="text-base font-bold font-body" style="color:#F0E8DC;">Rp 0</div>
+          </div>
+          <div class="px-5 py-3">
+            <div class="text-xs font-body mb-0.5" style="color:rgba(240,232,220,0.4);">Metode</div>
+            <div id="sPayMethod" class="text-sm font-semibold font-body" style="color:#F0E8DC;">QRIS</div>
+          </div>
+        </div>
+        <div class="px-5 py-2.5 flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full flex-shrink-0 pulse" style="background:#C4855A;"></div>
+          <span id="sTxt" class="text-xs font-medium font-body" style="color:rgba(240,232,220,0.6);">Menunggu Pembayaran</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 py-4">
+      <div class="text-xs font-semibold tracking-widest uppercase mb-3 font-body" style="color:#9C8878;">Detail Pesanan</div>
+      <div id="sucOrderDetail" class="rounded-2xl overflow-hidden mb-4" style="background:#fff;border:1px solid rgba(120,80,58,0.13);"></div>
+
+      <div id="qrisCard" class="rounded-2xl overflow-hidden mb-4" style="background:#fff;border:1px solid rgba(120,80,58,0.13);">
+        <div class="p-4 text-center">
+          <div class="text-xs font-semibold tracking-widest uppercase mb-3 font-body" style="color:#9C8878;">Scan untuk Bayar</div>
+          <img id="qrImg" src="" alt="QRIS" class="rounded-xl mx-auto" style="max-width:190px;width:100%;">
+          <div class="text-xs mt-2.5 font-body" style="color:#9C8878;">Semua e-wallet & mobile banking diterima</div>
+        </div>
+      </div>
+
+      <div id="cashCard" class="hidden rounded-2xl p-5 mb-4 text-center" style="background:#fff;border:1px solid rgba(120,80,58,0.13);">
+        <div class="text-3xl mb-3">💵</div>
+        <div class="text-sm font-body leading-relaxed" style="color:#78503A;">Silakan bayar ke kasir dan tunjukkan<br><strong>nomor order</strong> di atas kepada kasir ☝️</div>
+      </div>
+
+      <button onclick="resetAll()" class="w-full rounded-2xl py-3.5 text-sm font-semibold font-body" style="background:none;border:1.5px solid rgba(120,80,58,0.2);color:#78503A;cursor:pointer;">Pesan Lagi</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const MENU = {
+  'ml-main': [
+    {n:'Nasi Goreng Katsu',p:36000,e:'🍱',d:'Flavorful fried rice paired with crispy chicken katsu, drizzled with a rich and spicy black pepper sauce.'},
+    {n:'Kwetiau Katsu',p:36000,e:'🍜',d:'Crispy golden chicken katsu atop savory stir-fried flat noodles, finished with fresh lettuce for a perfect balance.'},
+  ],
+  'ml-rice': [
+    {n:'Ricebowl Asam Manis',p:28000,e:'🍚',d:'Crispy fried chicken coated in a vibrant sauce of tamarind, tomatoes, chili, and a touch of sugar.'},
+    {n:'Ricebowl Sambal Matah',p:28000,e:'🍚',d:'Traditional Balinese raw sambal of shallots, chilies, lemongrass, and lime mixed with coconut oil.'},
+    {n:'Ricebowl Cabe Garam',p:28000,e:'🍚',d:'Indonesian seasoning style with red chilies, garlic, and seasoned salt. Bold and aromatic.'},
+    {n:'Ricebowl Blackpepper',p:28000,e:'🍚',d:'Stir-fried chicken coated in a bold, savory black pepper sauce with soy sauce, garlic, and onions.'},
+    {n:'Ricebowl Butter Garlic',p:28000,e:'🍚',d:'Crispy fried chicken coated in a rich honey butter glaze. Perfectly sweet and savory.'},
+    {n:'Ricebowl Sambal Colo',p:30000,e:'🍚',d:'Chicken topped with sambal colo — a zesty mix of chopped chilies, shallots, tomatoes, and lime.'},
+  ],
+  'ml-pasta': [
+    {n:'Carbonara',p:35000,e:'🍝',d:'Spaghetti in a special creamy sauce with smoked beef, parmesan cheese, and black pepper.'},
+    {n:'Fettucine Aglio O\'lio',p:30000,e:'🍝',d:'Sautéed garlic in olive oil with red pepper flakes, tossed with spaghetti, parsley, and parmesan.'},
+    {n:'Fettucine Alfredo',p:35000,e:'🍝',d:'A creamy pasta dish featuring a rich sauce made from butter, heavy cream, and Parmesan cheese.'},
+  ],
+  'ml-snack': [
+    {n:'Gramme Plater',p:35000,e:'🍟',d:'A curated combo platter of our favorite snacks — perfect for sharing!'},
+    {n:'Wingbox Gramme',p:33000,e:'🍗',d:'Chicken wings with special sauce, crinkle fries, and cheese sauce.'},
+    {n:'Gramme Big Bucket',p:50000,e:'🪣',d:'The ultimate big bucket — chicken strips, nugget, spring roll, and fries.'},
+    {n:'Enoki Crispy',p:20000,e:'🍄',d:'Crispy fried enoki mushrooms served with chili sauce.'},
+    {n:'French Fries',p:22000,e:'🍟',d:'Crispy herb-seasoned fries with dipping sauce.'},
+    {n:'Golden Toastie',p:25000,e:'🥙',d:'Crispy deep-fried toast filled with melted cheese and sauce.'},
+    {n:'Cheese Roll',p:20000,e:'🧀',d:'Fried spring roll filled with cheese — crispy outside, gooey inside.'},
+    {n:'Singkong Goreng',p:20000,e:'🍠',d:'Soft fried cassava served with sweet chili soy dipping sauce.'},
+    {n:'Potato Wedges',p:22000,e:'🥔',d:'Seasoned potato wedges with tomato sauce.'},
+    {n:'Tahu Bakso',p:26000,e:'🍢',d:'Crispy fried tofu stuffed with savory meatball, served with chili sauce.'},
+    {n:'Chicken Strips',p:27000,e:'🍗',d:'Crispy chicken strips served with your choice of dipping sauce.'},
+    {n:'Tahu Cabe Garam',p:22000,e:'🌶️',d:'Fried tofu tossed with aromatic stir-fried chilies, shallots, and seasoned salt.'},
+  ],
+  'ml-dessert': [
+    {n:'Brownies',p:8000,e:'🍫',d:'Rich chocolate brownies with sliced almond topping.'},
+    {n:'Tiramisu Toast',p:35000,e:'🍞',d:'Thick toast with tiramisu cream and cinnamon.'},
+    {n:'Chocolate Toast',p:35000,e:'🍞',d:'Thick toast with premium chocolate spread and butter.'},
+    {n:'Donat Gula',p:7000,e:'🍩',d:'Classic donut dusted with powdered sugar.'},
+    {n:'Donat Chocolate',p:10000,e:'🍩',d:'Donut topped with melted chocolate and chopped nuts.'},
+    {n:'Donat Tiramisu',p:10000,e:'🍩',d:'Donut with tiramisu glaze and caramel biscuit crumble.'},
+  ],
+  'ml-coffee': [
+    {n:'Espresso',p:25000,e:'☕',d:'Single shot of rich, bold espresso.'},
+    {n:'Americano',p:25000,e:'☕',d:'Espresso with hot water — light yet aromatic.'},
+    {n:'Longblack',p:25000,e:'☕',d:'Double espresso over hot water — stronger than americano.'},
+    {n:'Cafe Latte',p:30000,e:'🥛',d:'Espresso with steamed milk, smooth and creamy.'},
+    {n:'Cappuccino',p:30000,e:'🥛',d:'Espresso, steamed milk, and thick milk foam.'},
+    {n:'Flat White',p:30000,e:'🥛',d:'High-ratio espresso with fine microfoam milk.'},
+    {n:'Piccolo',p:30000,e:'🥛',d:'Ristretto shot with a touch of steamed milk — intense and bold.'},
+    {n:'Spanish Latte',p:22000,e:'☕',d:'Sweet latte with condensed milk, Spanish style.'},
+    {n:'Vanilla Latte',p:28000,e:'☕',d:'Latte with fragrant vanilla syrup, smooth and delicate.'},
+    {n:'Caramel Latte',p:28000,e:'☕',d:'Latte with sweet and slightly savory caramel syrup.'},
+    {n:'Hazelnut Latte',p:28000,e:'☕',d:'Latte with rich, nutty hazelnut aroma.'},
+  ],
+  'ml-noncoffee': [
+    {n:'Hojicha',p:25000,e:'🍵',d:'Japanese roasted green tea with an earthy, calming flavor.'},
+    {n:'Matcha',p:25000,e:'🍵',d:'Premium Japanese matcha with fresh milk — rich and creamy.'},
+    {n:'Chocolate',p:25000,e:'🍫',d:'Rich and creamy chocolate drink, hot or iced.'},
+    {n:'Red Velvet',p:25000,e:'🍓',d:'Creamy red velvet drink with subtle chocolate flavor.'},
+    {n:'Taro',p:25000,e:'🫐',d:'Sweet purple taro drink with smooth creamy milk.'},
+    {n:'Lemon Tea',p:20000,e:'🍋',d:'Refreshing tea with real lemon squeeze.'},
+    {n:'Lychee Tea',p:20000,e:'🍈',d:'Tea with fragrant lychee syrup — sweet and fresh.'},
+  ],
+  'ml-sig': [
+    {n:'Gula Aren Coffee',p:25000,e:'🧋',d:'Coffee with authentic palm sugar — natural caramel sweetness.'},
+    {n:'Gramme Brulle',p:28000,e:'🧋',d:'Gramme signature coffee with a brûlée caramel touch.'},
+    {n:'Butterscotch Coffee',p:28000,e:'🧋',d:'Coffee with rich butterscotch syrup — sweet, savory, and aromatic.'},
+    {n:'Gramme Latte',p:23000,e:'🧋',d:'Gramme signature latte with layered milk and espresso.'},
+    {n:'Candy Rain',p:28000,e:'🍹',d:'Rose-red drink with milk foam and floral petals.'},
+    {n:'Candy Splash',p:28000,e:'🍹',d:'Pretty pink sparkling drink with sweet foam topping.'},
+    {n:'Hanayagi Sparkle',p:28000,e:'🍹',d:'Golden chocolate drink with foam and dried citrus garnish.'},
+    {n:'Autumn Leaves',p:28000,e:'🍹',d:'Dark chocolate drink with rose foam and floral decoration.'},
+    {n:'Lunaire',p:28000,e:'🥂',d:'Elegant green sparkling drink served in a champagne glass.'},
+  ],
+};
+
+let cart = {};
+let cartOpen = false;
+let payMethod = 'QRIS';
+
+const urlP = new URLSearchParams(window.location.search);
+document.getElementById('tblNum').textContent = urlP.get('table') || '1';
+
+function rp(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+
+function renderMenus() {
+  Object.entries(MENU).forEach(([id, items]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = items.map((it, i) => `
+      <div class="mcard">
+        <div class="micon">${it.e}</div>
+        <div class="minfo">
+          <div class="mname">${it.n}</div>
+          <div class="mdesc">${it.d}</div>
+          <div class="mprice">${rp(it.p)}</div>
+        </div>
+        <div class="qty-wrap" id="qw-${id}-${i}">
+          <button class="btn-add" onclick="add('${id}',${i})">+</button>
+        </div>
+      </div>`).join('');
+  });
+}
+
+function key(lid, idx) { return lid + '_' + idx; }
+
+function add(lid, idx) {
+  const it = MENU[lid][idx];
+  const k = key(lid, idx);
+  if (!cart[k]) cart[k] = {n:it.n, p:it.p, lid, idx, qty:0};
+  cart[k].qty++;
+  syncQty(lid, idx);
+  updateCart();
+  showToast('+ ' + it.n);
+}
+
+function rem(lid, idx) {
+  const k = key(lid, idx);
+  if (!cart[k]) return;
+  cart[k].qty--;
+  if (cart[k].qty <= 0) delete cart[k];
+  syncQty(lid, idx);
+  updateCart();
+}
+
+function syncQty(lid, idx) {
+  const k = key(lid, idx);
+  const qty = cart[k] ? cart[k].qty : 0;
+  const qw = document.getElementById('qw-' + lid + '-' + idx);
+  if (!qw) return;
+  if (qty === 0) {
+    qw.innerHTML = `<button class="btn-add" onclick="add('${lid}',${idx})">+</button>`;
+  } else {
+    qw.innerHTML = `
+      <div class="qty-ctrl">
+        <button class="btn-sub" onclick="rem('${lid}',${idx})">−</button>
+        <span class="qty-n">${qty}</span>
+        <button class="btn-add has-items" onclick="add('${lid}',${idx})">+</button>
+      </div>`;
+  }
+}
+
+function totalItems() { return Object.values(cart).reduce((s,i)=>s+i.qty,0); }
+function totalPrice() { return Object.values(cart).reduce((s,i)=>s+i.p*i.qty,0); }
+
+function updateCart() {
+  const tot = totalItems();
+  const pr = totalPrice();
+  const wrap = document.getElementById('cartBarWrap');
+  if (tot === 0) {
+    wrap.classList.add('hidden');
+    if (cartOpen) closeCart();
+    return;
+  }
+  wrap.classList.remove('hidden');
+  document.getElementById('cartBadge').textContent = tot;
+  document.getElementById('cartLabel').textContent = tot + ' item dipilih';
+  document.getElementById('cartTotalText').textContent = rp(pr);
+  document.getElementById('cartTotalDrawer').textContent = rp(pr);
+  renderCartItems();
+}
+
+function renderCartItems() {
+  const items = Object.values(cart).filter(i=>i.qty>0);
+  document.getElementById('cartItemsList').innerHTML = items.map(i=>`
+    <div class="citem">
+      <span class="citem-name">${i.n}</span>
+      <div class="citem-ctrl">
+        <button class="citem-btn" onclick="rem('${i.lid}',${i.idx})">−</button>
+        <span class="citem-n">${i.qty}</span>
+        <button class="citem-btn" onclick="add('${i.lid}',${i.idx})">+</button>
+      </div>
+      <span class="citem-price">${rp(i.p*i.qty)}</span>
+    </div>`).join('');
+}
+
+function toggleCart() {
+  cartOpen ? closeCart() : openCart();
+}
+
+function openCart() {
+  cartOpen = true;
+  document.getElementById('cartPanel').classList.add('open');
+  const a = document.getElementById('cartArrow');
+  a.textContent = 'Tutup Pesanan';
+  a.style.color = '#C4855A';
+  a.style.background = 'rgba(196,133,90,0.15)';
+}
+
+function closeCart() {
+  cartOpen = false;
+  document.getElementById('cartPanel').classList.remove('open');
+  const a = document.getElementById('cartArrow');
+  a.textContent = 'Lihat Pesanan';
+  a.style.color = 'rgba(240,232,220,0.6)';
+  a.style.background = 'rgba(255,255,255,0.08)';
+}
+
+function goTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function goCheckout() {
+  if (totalItems()===0) return;
+  closeCart();
+  buildCkSummary();
+  showPage('ckPage');
+}
+
+function buildCkSummary() {
+  const items = Object.values(cart).filter(i=>i.qty>0);
+  let h = items.map(i=>`
+    <div class="o-row">
+      <div><div class="o-name">${i.n}</div><div class="o-qty">× ${i.qty}</div></div>
+      <div class="o-price">${rp(i.p*i.qty)}</div>
+    </div>`).join('');
+  h += `<div class="o-total-row"><span>Total</span><span>${rp(totalPrice())}</span></div>`;
+  document.getElementById('ckSummary').innerHTML = h;
+}
+
+function selPay(m) {
+  payMethod = m;
+  document.getElementById('payQRIS').classList.toggle('sel', m==='QRIS');
+  document.getElementById('payCash').classList.toggle('sel', m==='Cash');
+}
+
+function placeOrder() {
+  const oid = 'A' + Math.floor(100+Math.random()*900);
+  const tot = totalPrice();
+
+  document.getElementById('sOid').textContent = '#' + oid;
+  document.getElementById('sTotal').textContent = rp(tot);
+  document.getElementById('sPayMethod').textContent = payMethod === 'QRIS' ? '📱 QRIS' : '💵 Cash';
+
+  const items = Object.values(cart).filter(i=>i.qty>0);
+  let dh = items.map(i=>`
+    <div class="o-row">
+      <div><div class="o-name">${i.n}</div><div class="o-qty">× ${i.qty}</div></div>
+      <div class="o-price">${rp(i.p*i.qty)}</div>
+    </div>`).join('');
+  dh += `<div class="o-total-row"><span>Total</span><span>${rp(tot)}</span></div>`;
+  document.getElementById('sucOrderDetail').innerHTML = dh;
+
+  if (payMethod === 'QRIS') {
+    document.getElementById('qrisCard').style.display = 'block';
+    document.getElementById('cashCard').classList.add('hidden');
+    document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=GRAMME-' + oid + '-' + tot;
+  } else {
+    document.getElementById('qrisCard').style.display = 'none';
+    document.getElementById('cashCard').classList.remove('hidden');
+  }
+
+  showPage('sucPage');
+  setTimeout(()=>{ document.getElementById('sTxt').textContent = 'Sedang Diproses ✓'; }, 6000);
+}
+
+function resetAll() {
+  Object.keys(cart).forEach(k=>{
+    const {lid,idx} = cart[k];
+    const qw = document.getElementById('qw-'+lid+'-'+idx);
+    if (qw) qw.innerHTML = `<button class="btn-add" onclick="add('${lid}',${idx})">+</button>`;
+  });
+  cart = {};
+  cartOpen = false;
+  payMethod = 'QRIS';
+  document.getElementById('cartBarWrap').classList.add('hidden');
+  document.getElementById('cartPanel').classList.remove('open');
+  const a = document.getElementById('cartArrow');
+  a.textContent = 'Lihat Pesanan';
+  a.style.color = 'rgba(240,232,220,0.6)';
+  a.style.background = 'rgba(255,255,255,0.08)';
+  document.getElementById('sTxt').textContent = 'Menunggu Pembayaran';
+  document.getElementById('payQRIS').classList.add('sel');
+  document.getElementById('payCash').classList.remove('sel');
+  renderMenus();
+  showPage('menuPage');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(()=>{
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(-4px)';
+  }, 1500);
+}
+
+(function() {
+  const drawer = document.getElementById('cartBarWrap');
+  let startY = 0;
+  drawer.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, {passive:true});
+  drawer.addEventListener('touchend', e => {
+    const dy = e.changedTouches[0].clientY - startY;
+    if (dy < -30) openCart();
+    else if (dy > 30) closeCart();
+  }, {passive:true});
+})();
+
+renderMenus();
+</script>
+</body>
+</html>

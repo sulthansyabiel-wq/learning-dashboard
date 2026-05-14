@@ -1,0 +1,22 @@
+    body {
+background-color: #ffb727;
+font-family: sans-serif;
+}
+
+.container {
+width: 80%;
+margin: auto;
+background: rgb(255, 255, 255);
+padding: 20px;
+border: 2px black solid;
+margin-top: 200px;
+border-radius: 10px;
+}
+
+h1 {
+color: #a9ae08;
+}
+
+p {
+font-size: 16px;
+}

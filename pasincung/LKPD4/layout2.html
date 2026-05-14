@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil SMK HEBAT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    /* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  background-color: #0b26af;
+}
+
+header {
+  background-color: #0b26af;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #012951;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Layout Utama menggunakan Flexbox */
+.container {
+  display: flex;
+  flex-wrap: wrap; /* Memungkinkan konten turun ke bawah jika layar sempit */
+  padding: 20px;
+  gap: 15px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex: 1 1 calc(33.333% - 20px); /* Tampilan Default: 3 Kolom */
+  min-width: 280px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #1e37b5;
+  color: white;
+  margin-top: 20px;
+}
+
+/* --- Media Queries (Ketentuan Minimal 2 Ukuran Layar) --- */
+
+/* 1. Tablet (Lebar maksimal 768px) */
+@media (max-width: 768px) {
+  .box {
+    flex: 1 1 calc(50% - 20px); /* Berubah menjadi 2 Kolom */
+  }
+  nav {
+    gap: 10px;
+  }
+}
+
+/* 2. Mobile (Lebar maksimal 480px) */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  nav {
+    flex-direction: column; /* Menu navigasi berjejer vertikal */
+    align-items: center;
+  }
+  .box {
+    flex: 1 1 100%; /* Berubah menjadi 1 Kolom penuh */
+  }
+}
+</style>
+<body>
+
+  <header>
+    <h1>SMK HEBAT</h1>
+    <p>Unggul, Berkarakter, dan Berdaya Saing Global</p>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Profil</a>
+    <a href="#">Jurusan</a>
+    <a href="#">Kontak</a>
+  </nav>
+
+  <main class="container">
+    <section class="box">
+      <h2>Visi & Misi</h2>
+      <p>Menjadi lembaga pendidikan kejuruan yang menghasilkan lulusan kompeten dan berakhlak mulia.</p>
+    </section>
+
+    <section class="box">
+      <h2>Fasilitas</h2>
+      <p>Laboratorium komputer modern, bengkel standar industri, dan perpustakaan digital lengkap.</p>
+    </section>
+
+    <section class="box">
+      <h2>Ekstrakurikuler</h2>
+      <p>Tersedia berbagai pilihan mulai dari Pramuka, Robotik, hingga Pengembangan Perangkat Lunak.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 SMK HEBAT - Semua Hak Dilindungi.</p>
+  </footer>
+
+</body>
+</html>

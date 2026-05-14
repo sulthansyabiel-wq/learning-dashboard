@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Matematika - Pythagoras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 leading-relaxed">
+
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">P</div>
+                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">Phytagoras</h1>
+            </div>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="#materi" class="px-4 py-2 text-slate-600 hover:text-indigo-600 font-semibold transition">Materi</a>
+                <a href="#gambar" class="px-4 py-2 text-slate-600 hover:text-indigo-600 font-semibold transition">Ilustrasi</a>
+                <a href="#belajar" class="ml-4 px-5 py-2.5 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 text-sm">Mulai Belajar</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="py-20 px-6 bg-white">
+        <div class="container mx-auto max-w-4xl text-center">
+            <span class="inline-block px-4 py-1.5 mb-6 text-sm font-bold tracking-widest text-indigo-600 uppercase bg-indigo-50 rounded-full">Matematika Dasar</span>
+            <h2 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">Eksplorasi Teorema <span class="text-indigo-600">Pythagoras</span></h2>
+            <p class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                Panduan interaktif untuk memahami hubungan matematis pada segitiga siku-siku secara visual dan sederhana.
+            </p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 max-w-4xl">
+        
+        <article id="materi" class="bg-white p-8 md:p-12 rounded-[2rem] shadow-xl shadow-slate-200/50 mb-12 border border-slate-100 mt-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-1 bg-indigo-600 rounded-full"></div>
+                <h3 class="text-2xl font-extrabold text-slate-800">Konsep Materi</h3>
+            </div>
+            
+            <p class="mb-8 text-slate-600 text-lg">
+                Ditemukan oleh matematikawan Yunani bernama Pythagoras, teorema ini menjadi fondasi penting dalam geometri. Intinya adalah hubungan antara ketiga sisi pada <strong>segitiga siku-siku</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 my-10">
+                <div class="bg-slate-900 p-8 rounded-3xl text-center flex flex-col justify-center shadow-2xl">
+                    <p class="text-indigo-400 uppercase text-xs font-black tracking-widest mb-4">Rumus Utama</p>
+                    <p class="text-5xl font-serif text-white italic tracking-widest">a² + b² = c²</p>
+                </div>
+                <div class="bg-indigo-50 p-8 rounded-3xl flex flex-col justify-center">
+                    <h4 class="font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-indigo-600 rounded-full"></span> Keterangan Sisi:
+                    </h4>
+                    <ul class="space-y-4 text-slate-700 font-medium">
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-600 font-bold">a & b:</span> Sisi penyiku (alas dan tinggi)
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-600 font-bold">c:</span> Sisi miring (hipotenusa)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="text-slate-600 leading-relaxed mb-10">
+                Syarat utama berlakunya teorema ini adalah segitiga tersebut harus memiliki satu sudut tepat 90 derajat. Sisi <strong>c</strong> selalu merupakan sisi terpanjang dan terletak tepat di depan sudut siku-siku tersebut.
+            </p>
+
+            <div id="belajar" class="text-center">
+                <a href="#gambar" class="group inline-flex items-center gap-3 bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-indigo-700 transition shadow-xl shadow-indigo-200">
+                    Lihat Representasi Visual
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-y-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                </a>
+            </div>
+        </article>
+
+        <section id="gambar" class="bg-white p-8 md:p-12 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-1 bg-indigo-600 rounded-full"></div>
+                <h3 class="text-2xl font-extrabold text-slate-800">Visualisasi Geometri</h3>
+            </div>
+            
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative bg-white p-3 rounded-[1.8rem] shadow-inner overflow-hidden border border-slate-100">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1000&auto=format&fit=crop" 
+                         alt="Ilustrasi Segitiga Pythagoras" 
+                         class="rounded-[1.5rem] w-full h-auto object-cover border border-slate-50">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-16 mt-24 border-t-8 border-indigo-600">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center items-center gap-2 mb-6">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">P</div>
+                <span class="text-white font-extrabold text-xl tracking-tight">Phytagoras</span>
+            </div>
+            <p class="text-slate-300 font-semibold mb-2">Pusat Belajar Matematika Digital</p>
+            <p class="text-sm opacity-60">SMKN 2 Banjarmasin © 2026</p>
+            <div class="flex justify-center gap-6 mt-10">
+                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition cursor-pointer">
+                    <span class="text-white text-sm">IG</span>
+                </div>
+                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition cursor-pointer">
+                    <span class="text-white text-sm">YT</span>
+                </div>
+                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition cursor-pointer">
+                    <span class="text-white text-sm">FB</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

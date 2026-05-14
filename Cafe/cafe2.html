@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe BrewVerse — Kopi & Cerita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: { 850: '#1f1f1e', 950: '#0c0c0c' },
+                        amber: { 350: '#dcb163' }
+                    },
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        body: ['Inter', 'sans-serif'],
+                        reading: ['Crimson Pro', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0c0c0c; color: #f5f5f4; }
+        h1, h2, h3, h4, .font-display { font-family: 'Cinzel', serif; }
+        .font-reading { font-family: 'Crimson Pro', serif; }
+        .gradient-text {
+            background: linear-gradient(to right, #fde68a, #fbbf24, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-overlay-1 {
+            background: linear-gradient(to bottom, rgba(12,12,12,0.7), rgba(12,12,12,0.4), #0c0c0c);
+        }
+        .hero-overlay-2 {
+            background: radial-gradient(circle at center, transparent, rgba(12,12,12,0.5), #0c0c0c);
+        }
+        .card-overlay {
+            background: linear-gradient(to top, #0c0c0c, transparent, transparent);
+        }
+        .step-line {
+            background: linear-gradient(to right, #292524, #44403c, #292524);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+        .toast {
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .mobile-menu {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .mobile-menu.open { max-height: 400px; opacity: 1; }
+
+        /* Theme transition */
+        html { transition: background-color 0.4s ease, color 0.4s ease; }
+        body, nav, section, footer, div, a, p, h1, h2, h3, h4, span, iframe, img {
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* ========================================
+           LIGHT MODE OVERRIDES
+           ======================================== */
+        [data-theme="light"] body {
+            background: #fafaf9; color: #292524;
+        }
+
+        /* --- Navbar --- */
+        [data-theme="light"] nav#navbar {
+            background: rgba(250,250,249,0.88) !important;
+            border-bottom: 1px solid #e7e5e4;
+        }
+        [data-theme="light"] .nav-logo { color: #1c1917 !important; }
+        [data-theme="light"] .nav-link { color: #78716c !important; }
+        [data-theme="light"] .nav-link:hover { color: #1c1917 !important; }
+        [data-theme="light"] .theme-btn-icon { color: #57534e; }
+        [data-theme="light"] #mobile-menu {
+            background: rgba(250,250,249,0.97) !important;
+            border-bottom-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .mobile-link { color: #78716c !important; }
+        [data-theme="light"] .mobile-link:hover { color: #1c1917 !important; }
+
+        /* --- Hero --- */
+        [data-theme="light"] .hero-overlay-1 {
+            background: linear-gradient(to bottom, rgba(250,250,249,0.75), rgba(250,250,249,0.45), #fafaf9);
+        }
+        [data-theme="light"] .hero-overlay-2 {
+            background: radial-gradient(circle at center, transparent, rgba(250,250,249,0.5), #fafaf9);
+        }
+        [data-theme="light"] .hero-img {
+            opacity: 0.2 !important;
+            filter: grayscale(60%) contrast(1.1) !important;
+        }
+        [data-theme="light"] .hero-glow {
+            background: rgba(251,191,36,0.08) !important;
+        }
+        [data-theme="light"] .hero-subtitle { color: #57534e !important; }
+        [data-theme="light"] .hero-cta-border {
+            border-color: #d6d3d1 !important; color: #1c1917 !important;
+        }
+        [data-theme="light"] .hero-cta-border:hover {
+            border-color: #a8a29e !important;
+        }
+        [data-theme="light"] .hero-scroll { color: #a8a29e !important; }
+
+        /* --- Section labels & headings --- */
+        [data-theme="light"] .section-label { color: #b45309 !important; }
+        [data-theme="light"] .section-title { color: #1c1917 !important; }
+        [data-theme="light"] .section-desc { color: #78716c !important; }
+
+        /* --- Dividers --- */
+        [data-theme="light"] .divider-line {
+            background: linear-gradient(to right, #e7e5e4, #d6d3d1, #e7e5e4) !important;
+        }
+
+        /* --- Delivery cards --- */
+        [data-theme="light"] .delivery-card {
+            background: #ffffff !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .delivery-card:hover {
+            border-color: #d97706 !important;
+        }
+        [data-theme="light"] .delivery-card-title { color: #1c1917 !important; }
+        [data-theme="light"] .delivery-card-sub { color: #a8a29e !important; }
+        [data-theme="light"] .delivery-card:hover .delivery-card-bg {
+            background: rgba(217,119,6,0.04) !important;
+        }
+        [data-theme="light"] .delivery-icon-go { background: rgba(34,197,94,0.1) !important; }
+        [data-theme="light"] .delivery-icon-grab { background: rgba(16,185,129,0.1) !important; }
+        [data-theme="light"] .delivery-icon-shopee { background: rgba(249,115,22,0.1) !important; }
+
+        /* --- Best seller cards --- */
+        [data-theme="light"] .best-card {
+            background: #ffffff !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .best-card:hover { border-color: #d97706 !important; }
+        [data-theme="light"] .best-card-title { color: #1c1917 !important; }
+        [data-theme="light"] .best-card-desc { color: #57534e !important; }
+        [data-theme="light"] .best-card-img { opacity: 0.5 !important; }
+        [data-theme="light"] .best-card-overlay {
+            background: linear-gradient(to top, #ffffff, transparent, transparent) !important;
+        }
+        [data-theme="light"] .badge-1 { background: #d97706 !important; color: white !important; }
+        [data-theme="light"] .badge-n { background: #f5f5f4 !important; color: #57534e !important; }
+
+        /* --- Menu tabs --- */
+        [data-theme="light"] .tab-btn-inactive {
+            background: #f5f5f4 !important; color: #78716c !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .tab-btn-inactive:hover {
+            border-color: #d6d3d1 !important; color: #57534e !important;
+        }
+        [data-theme="light"] .tab-btn-active {
+            background: #92400e !important; color: #ffffff !important;
+            border-color: #92400e !important;
+        }
+        [data-theme="light"] .menu-notice { color: #a8a29e !important; }
+        [data-theme="light"] .menu-item-name { color: #1c1917 !important; }
+        [data-theme="light"] .menu-item-desc { color: #a8a29e !important; }
+        [data-theme="light"] .menu-item-price { color: #b45309 !important; }
+        [data-theme="light"] .menu-item-border {
+            border-color: #e7e5e4 !important;
+        }
+
+        /* --- About --- */
+        [data-theme="light"] .about-text { color: #57534e !important; }
+        [data-theme="light"] .about-text em { color: #292524 !important; }
+        [data-theme="light"] .about-text span { color: #b45309 !important; }
+        [data-theme="light"] .about-img-wrap {
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .about-img { opacity: 0.8 !important; }
+        [data-theme="light"] .about-stat-label { color: #a8a29e !important; }
+        [data-theme="light"] .about-glow {
+            background: rgba(251,191,36,0.06) !important;
+        }
+
+        /* --- Testimonials --- */
+        [data-theme="light"] .testi-card {
+            background: #ffffff !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .testi-card:hover { border-color: #d97706 !important; }
+        [data-theme="light"] .testi-quote { color: #44403c !important; }
+        [data-theme="light"] .testi-avatar {
+            background: #f5f5f4 !important;
+        }
+        [data-theme="light"] .testi-avatar span { color: #78716c !important; }
+        [data-theme="light"] .testi-name { color: #1c1917 !important; }
+        [data-theme="light"] .testi-role { color: #a8a29e !important; }
+
+        /* --- Contact --- */
+        [data-theme="light"] .contact-icon-wrap {
+            background: #f5f5f4 !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .contact-title { color: #1c1917 !important; }
+        [data-theme="light"] .contact-text { color: #57534e !important; }
+        [data-theme="light"] .social-label { color: #a8a29e !important; }
+        [data-theme="light"] .social-btn {
+            background: #f5f5f4 !important;
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .social-btn:hover { border-color: #d97706 !important; }
+        [data-theme="light"] .social-btn svg { color: #78716c !important; }
+        [data-theme="light"] .social-btn:hover svg { color: #d97706 !important; }
+        [data-theme="light"] .map-wrap { border-color: #e7e5e4 !important; }
+        [data-theme="light"] .map-wrap iframe {
+            filter: grayscale(0%) invert(0%) contrast(100%) !important;
+        }
+
+        /* --- Footer --- */
+        [data-theme="light"] footer {
+            border-top-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .footer-logo { color: #1c1917 !important; }
+        [data-theme="light"] .footer-dot { color: #d6d3d1 !important; }
+        [data-theme="light"] .footer-tagline { color: #a8a29e !important; }
+        [data-theme="light"] .footer-link { color: #78716c !important; }
+        [data-theme="light"] .footer-link:hover { color: #44403c !important; }
+        [data-theme="light"] .footer-copy { color: #d6d3d1 !important; }
+
+        /* --- Toast --- */
+        [data-theme="light"] #toast {
+            background: #92400e !important; color: #fff !important;
+        }
+
+        /* --- Theme toggle button special --- */
+        .theme-toggle-btn {
+            width: 40px; height: 40px;
+            border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle-btn:hover { border-color: rgba(255,255,255,0.2); }
+        [data-theme="light"] .theme-toggle-btn {
+            border-color: #e7e5e4 !important;
+        }
+        [data-theme="light"] .theme-toggle-btn:hover {
+            border-color: #d6d3d1 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ======================== TOAST ======================== -->
+    <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-amber-700 text-stone-100 px-6 py-3 rounded-sm text-sm font-medium shadow-2xl flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span id="toast-msg">Pesan terkirim!</span>
+    </div>
+
+    <!-- ======================== NAVBAR ======================== -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 h-20 flex items-center" style="background: rgba(12,12,12,0.6); backdrop-filter: blur(12px);">
+        <div class="max-w-6xl mx-auto w-full px-6 flex items-center justify-between">
+            <a href="#beranda" class="nav-logo font-display text-xl font-medium text-stone-100 hover:text-amber-500 transition-colors duration-150 tracking-tight">
+                BrewVerse
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#beranda" class="nav-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors duration-150">Beranda</a>
+                <a href="#menu" class="nav-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors duration-150">Menu</a>
+                <a href="#tentang" class="nav-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors duration-150">Tentang</a>
+                <a href="#testimoni" class="nav-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors duration-150">Testimoni</a>
+                <a href="#kontak" class="nav-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors duration-150">Kontak</a>
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Ganti tema" title="Ganti tema gelap/terang">
+                    <i data-lucide="moon" class="w-[18px] h-[18px] theme-btn-icon text-stone-400" id="icon-moon"></i>
+                    <i data-lucide="sun" class="w-[18px] h-[18px] theme-btn-icon text-stone-400 hidden" id="icon-sun"></i>
+                </button>
+            </div>
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" class="theme-toggle-btn" aria-label="Ganti tema" title="Ganti tema gelap/terang">
+                    <i data-lucide="moon" class="w-[18px] h-[18px] theme-btn-icon text-stone-400" id="icon-moon-m"></i>
+                    <i data-lucide="sun" class="w-[18px] h-[18px] theme-btn-icon text-stone-400 hidden" id="icon-sun-m"></i>
+                </button>
+                <button id="menu-toggle" class="text-stone-400 hover:text-stone-100 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6" id="menu-icon-open"></i>
+                    <i data-lucide="x" class="w-6 h-6 hidden" id="menu-icon-close"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="mobile-menu absolute top-20 left-0 right-0 bg-stone-950/95 backdrop-blur-md border-b border-white/5 md:hidden">
+            <div class="px-6 py-4 flex flex-col gap-4">
+                <a href="#beranda" class="mobile-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors py-2">Beranda</a>
+                <a href="#menu" class="mobile-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors py-2">Menu</a>
+                <a href="#tentang" class="mobile-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors py-2">Tentang</a>
+                <a href="#testimoni" class="mobile-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors py-2">Testimoni</a>
+                <a href="#kontak" class="mobile-link text-sm font-medium uppercase tracking-wide text-stone-400 hover:text-stone-100 transition-colors py-2">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================== HERO ======================== -->
+    <section id="beranda" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <img src="https://picsum.photos/seed/brewverse-hero-cafe/1920/1080.jpg" alt="Kafe BrewVerse" class="hero-img absolute inset-0 w-full h-full object-cover opacity-30" style="filter: grayscale(100%) contrast(1.25);">
+        <div class="absolute inset-0 hero-overlay-1"></div>
+        <div class="absolute inset-0 hero-overlay-2"></div>
+        <div class="hero-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-amber-600/10 rounded-full" style="filter: blur(100px);"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto text-center px-6">
+            <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-6" style="letter-spacing: 0.1em;">Est. 2020 · Jakarta</p>
+            <h1 class="font-display font-medium text-5xl md:text-7xl lg:text-8xl leading-none tracking-tight mb-8">
+                <span class="gradient-text">Kafe</span><br>
+                <span class="section-title text-stone-100">BrewVerse</span>
+            </h1>
+            <p class="hero-subtitle text-lg md:text-xl font-light leading-relaxed text-stone-400 max-w-2xl mx-auto mb-10">
+                Setiap tegukan adalah perjalanan rasa. Temukan kopi terbaik dan suasana yang menginspirasi di sudut kota kami.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#menu" class="px-8 py-4 bg-amber-700 hover:bg-amber-600 text-stone-100 font-semibold text-sm rounded-sm transition-colors duration-150" style="box-shadow: 0 0 20px -5px rgba(180,83,9,0.4);">
+                    Lihat Menu
+                </a>
+                <a href="https://wa.me/6281234567890?text=Halo%20BrewVerse%2C%20saya%20ingin%20reservasi" target="_blank" rel="noopener" class="hero-cta-border px-8 py-4 border border-stone-700 hover:border-stone-500 text-stone-100 font-semibold text-sm rounded-sm transition-colors duration-150 flex items-center gap-2">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    Reservasi via WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 float-anim">
+            <i data-lucide="chevron-down" class="hero-scroll w-5 h-5 text-stone-600"></i>
+        </div>
+    </section>
+
+    <!-- ======================== DELIVERY ======================== -->
+    <section class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Pengiriman</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100">Pesan dari Rumah</h2>
+                <p class="section-desc text-stone-400 mt-4 text-lg font-light">Nikmati menu favoritmu tanpa perlu keluar rumah</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <a href="https://gofood.co.id" target="_blank" rel="noopener" class="delivery-card group relative p-8 border border-stone-800 rounded-sm bg-stone-900/30 transition-all duration-150 text-center">
+                    <div class="delivery-card-bg absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="background: rgba(180,83,9,0.05);"></div>
+                    <div class="relative z-10">
+                        <div class="delivery-icon-go w-14 h-14 mx-auto mb-4 rounded-full bg-green-900/30 flex items-center justify-center">
+                            <i data-lucide="bike" class="w-6 h-6 text-green-400"></i>
+                        </div>
+                        <p class="delivery-card-title font-display font-medium text-stone-100 text-lg">GoFood</p>
+                        <p class="delivery-card-sub text-stone-500 text-sm mt-1">Pesan sekarang</p>
+                    </div>
+                </a>
+                <a href="https://food.grab.com" target="_blank" rel="noopener" class="delivery-card group relative p-8 border border-stone-800 rounded-sm bg-stone-900/30 transition-all duration-150 text-center">
+                    <div class="delivery-card-bg absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="background: rgba(180,83,9,0.05);"></div>
+                    <div class="relative z-10">
+                        <div class="delivery-icon-grab w-14 h-14 mx-auto mb-4 rounded-full bg-emerald-900/30 flex items-center justify-center">
+                            <i data-lucide="package" class="w-6 h-6 text-emerald-400"></i>
+                        </div>
+                        <p class="delivery-card-title font-display font-medium text-stone-100 text-lg">GrabFood</p>
+                        <p class="delivery-card-sub text-stone-500 text-sm mt-1">Pesan sekarang</p>
+                    </div>
+                </a>
+                <a href="https://shopee.co.id/makanan" target="_blank" rel="noopener" class="delivery-card group relative p-8 border border-stone-800 rounded-sm bg-stone-900/30 transition-all duration-150 text-center">
+                    <div class="delivery-card-bg absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" style="background: rgba(180,83,9,0.05);"></div>
+                    <div class="relative z-10">
+                        <div class="delivery-icon-shopee w-14 h-14 mx-auto mb-4 rounded-full bg-orange-900/30 flex items-center justify-center">
+                            <i data-lucide="shopping-bag" class="w-6 h-6 text-orange-400"></i>
+                        </div>
+                        <p class="delivery-card-title font-display font-medium text-stone-100 text-lg">ShopeeFood</p>
+                        <p class="delivery-card-sub text-stone-500 text-sm mt-1">Pesan sekarang</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DIVIDER ======================== -->
+    <div class="max-w-xl mx-auto px-6"><div class="divider-line h-px" style="background: linear-gradient(to right, #292524, #44403c, #292524);"></div></div>
+
+    <!-- ======================== TERLARIS ======================== -->
+    <section class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Favorit Pelanggan</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100">Menu Terlaris</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="best-card group relative rounded-sm border border-white/10 overflow-hidden transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://picsum.photos/seed/espresso-brewverse/600/400.jpg" alt="Espresso BrewVerse" class="best-card-img w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <div class="best-card-overlay card-overlay absolute inset-0"></div>
+                        <div class="badge-1 absolute top-4 right-4 bg-amber-700 text-stone-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm" style="letter-spacing:0.1em;">#1 Terlaris</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="best-card-title font-display text-xl font-semibold text-stone-100 mb-2">Espresso BrewVerse</h3>
+                        <p class="best-card-desc text-stone-400 font-light leading-relaxed mb-4">Double shot espresso dengan biji kopi pilihan dari Toraja. Rich, bold, dan memorable.</p>
+                        <p class="menu-item-price text-amber-500 font-display text-lg font-medium">Rp 28.000</p>
+                    </div>
+                </div>
+                <div class="best-card group relative rounded-sm border border-white/10 overflow-hidden transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://picsum.photos/seed/matcha-latte-cafe/600/400.jpg" alt="Matcha Latte" class="best-card-img w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <div class="best-card-overlay card-overlay absolute inset-0"></div>
+                        <div class="badge-n absolute top-4 right-4 bg-stone-800 text-stone-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm" style="letter-spacing:0.1em;">#2 Terlaris</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="best-card-title font-display text-xl font-semibold text-stone-100 mb-2">Matcha Latte</h3>
+                        <p class="best-card-desc text-stone-400 font-light leading-relaxed mb-4">Matcha premium grade dari Uji, Jepang. Diseduh dengan susu oat untuk rasa yang creamy dan lembut.</p>
+                        <p class="menu-item-price text-amber-500 font-display text-lg font-medium">Rp 35.000</p>
+                    </div>
+                </div>
+                <div class="best-card group relative rounded-sm border border-white/10 overflow-hidden transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://picsum.photos/seed/croissant-butter-cafe/600/400.jpg" alt="Butter Croissant" class="best-card-img w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out">
+                        <div class="best-card-overlay card-overlay absolute inset-0"></div>
+                        <div class="badge-n absolute top-4 right-4 bg-stone-800 text-stone-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm" style="letter-spacing:0.1em;">#3 Terlaris</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="best-card-title font-display text-xl font-semibold text-stone-100 mb-2">Butter Croissant</h3>
+                        <p class="best-card-desc text-stone-400 font-light leading-relaxed mb-4">Croissant renyah dengan lapisan butter Prancis. Dipanggang segar setiap pagi di dapur kami.</p>
+                        <p class="menu-item-price text-amber-500 font-display text-lg font-medium">Rp 22.000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DIVIDER ======================== -->
+    <div class="max-w-xl mx-auto px-6"><div class="divider-line h-px" style="background: linear-gradient(to right, #292524, #44403c, #292524);"></div></div>
+
+    <!-- ======================== MENU PREVIEW ======================== -->
+    <section id="menu" class="py-24 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Daftar Harga</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100">Pratinjau Menu</h2>
+                <p class="menu-notice text-stone-500 mt-4 text-sm flex items-center justify-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    Pemesanan hanya tersedia di kafe atau melalui platform pengiriman
+                </p>
+            </div>
+            <div class="flex justify-center gap-2 mb-12 flex-wrap">
+                <button onclick="switchTab('kopi')" id="tab-kopi" class="tab-btn-active tab-btn px-5 py-2 text-sm font-medium uppercase tracking-wide rounded-sm transition-all duration-150 border">Kopi</button>
+                <button onclick="switchTab('non-kopi')" id="tab-non-kopi" class="tab-btn-inactive tab-btn px-5 py-2 text-sm font-medium uppercase tracking-wide rounded-sm transition-all duration-150 border">Non-Kopi</button>
+                <button onclick="switchTab('makanan')" id="tab-makanan" class="tab-btn-inactive tab-btn px-5 py-2 text-sm font-medium uppercase tracking-wide rounded-sm transition-all duration-150 border">Makanan</button>
+            </div>
+
+            <!-- Kopi -->
+            <div id="panel-kopi" class="menu-panel space-y-0">
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Espresso</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Single / Double shot</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 22.000 / 28.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Americano</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Espresso + air panas</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 25.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Cappuccino</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Espresso + susu + foam</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 32.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">V60 Pour Over</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Single origin — tanya barista kami</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 38.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Espresso Tonic</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Espresso + tonic water + es</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 33.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Affogato</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Espresso + gelato vanilla</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 35.000</p>
+                </div>
+            </div>
+
+            <!-- Non-Kopi -->
+            <div id="panel-non-kopi" class="menu-panel hidden space-y-0">
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Matcha Latte</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Matcha Uji + susu oat</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 35.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Chocolate Bliss</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Cokelat Belgia + susu</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 33.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Lemonade Mint</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Perasan lemon segar + daun mint</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 25.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Teh Tarik</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Teh hitam + susu kental — gaya Malaysia</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 22.000</p>
+                </div>
+            </div>
+
+            <!-- Makanan -->
+            <div id="panel-makanan" class="menu-panel hidden space-y-0">
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Butter Croissant</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Dipanggang segar setiap pagi</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 22.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Avocado Toast</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Sourdough + alpukat + telur mata sapi</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 38.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5 menu-item-border border-b border-stone-800/60">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Banana Bread</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Homemade + walnuts + butter</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 25.000</p>
+                </div>
+                <div class="flex items-center justify-between py-5">
+                    <div><p class="menu-item-name text-stone-100 font-medium">Club Sandwich</p><p class="menu-item-desc text-stone-500 text-sm mt-0.5">Ayam, telur, selada, tomat</p></div>
+                    <p class="menu-item-price text-amber-500 font-display font-medium">Rp 42.000</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DIVIDER ======================== -->
+    <div class="max-w-xl mx-auto px-6"><div class="divider-line h-px" style="background: linear-gradient(to right, #292524, #44403c, #292524);"></div></div>
+
+    <!-- ======================== TENTANG KAMI ======================== -->
+    <section id="tentang" class="py-24 md:py-32 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div class="relative group">
+                <div class="about-img-wrap h-[600px] rounded-sm border border-white/10 overflow-hidden">
+                    <img src="https://picsum.photos/seed/cafe-interior-cozy/800/1000.jpg" alt="Interior Kafe BrewVerse" class="about-img w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700 ease-out">
+                </div>
+                <div class="about-glow absolute -bottom-10 -left-10 w-48 h-48 bg-amber-600/10 rounded-full" style="filter: blur(60px);"></div>
+            </div>
+            <div>
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Cerita Kami</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100 mb-8">Tentang BrewVerse</h2>
+                <div class="space-y-5 about-text text-stone-400 font-light leading-relaxed">
+                    <p>BrewVerse lahir dari sebuah ide sederhana: menciptakan ruang di mana kopi bukan sekadar minuman, melainkan sebuah <em class="text-stone-300 font-reading italic">pengalaman</em>.</p>
+                    <p>Didirikan pada tahun 2020 di jantung Jakarta, kami memulai perjalanan dengan satu mesin espresso dan impian besar. Setiap biji kopi yang kami gunakan dipilih langsung dari petani lokal di Toraja, Gayo, dan Kintamani.</p>
+                    <p>Kami percaya bahwa secangkir kopi yang baik bisa memulai percakapan, membangun hubungan, dan menginspirasi ide-ide baru. Itulah mengapa kami menyebutnya <span class="text-amber-500 font-medium">BrewVerse</span> — sebuah alam semesta rasa dalam setiap cangkir.</p>
+                </div>
+                <div class="mt-10 grid grid-cols-3 gap-6">
+                    <div>
+                        <p class="font-display text-2xl font-medium gradient-text">5+</p>
+                        <p class="about-stat-label text-stone-500 text-sm mt-1">Tahun Berdiri</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-2xl font-medium gradient-text">12K+</p>
+                        <p class="about-stat-label text-stone-500 text-sm mt-1">Cangkir / Bulan</p>
+                    </div>
+                    <div>
+                        <p class="font-display text-2xl font-medium gradient-text">4.9</p>
+                        <p class="about-stat-label text-stone-500 text-sm mt-1">Rating Google</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DIVIDER ======================== -->
+    <div class="max-w-xl mx-auto px-6"><div class="divider-line h-px" style="background: linear-gradient(to right, #292524, #44403c, #292524);"></div></div>
+
+    <!-- ======================== TESTIMONI ======================== -->
+    <section id="testimoni" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Kata Mereka</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100">Testimoni Pelanggan</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testi-card p-8 rounded-sm border border-stone-800 transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="flex items-center gap-1 mb-5">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                    </div>
+                    <p class="testi-quote text-stone-300 font-reading italic text-lg leading-relaxed mb-6">"Tempat paling nyaman untuk bekerja remote. Kopinya konsisten enak, WiFi kencang, dan baristanya ramah. Sudah jadi kafe langganan saya."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="testi-avatar w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center"><span class="text-stone-400 text-sm font-medium">AR</span></div>
+                        <div><p class="testi-name text-stone-100 text-sm font-medium">Aisyah Rahma</p><p class="testi-role text-stone-500 text-xs">Freelance Designer</p></div>
+                    </div>
+                </div>
+                <div class="testi-card p-8 rounded-sm border border-stone-800 transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="flex items-center gap-1 mb-5">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                    </div>
+                    <p class="testi-quote text-stone-300 font-reading italic text-lg leading-relaxed mb-6">"V60-nya luar biasa! Bisa berasa bedanya kopi single origin dari tiap daerah. Ini bukan sekadar kafe, ini edukasi rasa."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="testi-avatar w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center"><span class="text-stone-400 text-sm font-medium">BP</span></div>
+                        <div><p class="testi-name text-stone-100 text-sm font-medium">Budi Prasetyo</p><p class="testi-role text-stone-500 text-xs">Coffee Enthusiast</p></div>
+                    </div>
+                </div>
+                <div class="testi-card p-8 rounded-sm border border-stone-800 transition-all duration-150" style="background: rgba(28,25,23,0.5);">
+                    <div class="flex items-center gap-1 mb-5">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                    </div>
+                    <p class="testi-quote text-stone-300 font-reading italic text-lg leading-relaxed mb-6">"Matcha Latte-nya juara! Porsinya pas, nggak terlalu manis, dan suasananya cocok buat ngobrol santai sama teman. Love it!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="testi-avatar w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center"><span class="text-stone-400 text-sm font-medium">DS</span></div>
+                        <div><p class="testi-name text-stone-100 text-sm font-medium">Dinda Sari</p><p class="testi-role text-stone-500 text-xs">Content Creator</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DIVIDER ======================== -->
+    <div class="max-w-xl mx-auto px-6"><div class="divider-line h-px" style="background: linear-gradient(to right, #292524, #44403c, #292524);"></div></div>
+
+    <!-- ======================== KONTAK ======================== -->
+    <section id="kontak" class="py-24 md:py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="section-label text-xs font-bold uppercase tracking-widest text-amber-500 mb-4" style="letter-spacing: 0.1em;">Hubungi Kami</p>
+                <h2 class="section-title font-display font-medium text-3xl md:text-4xl tracking-tight text-stone-100">Kontak & Lokasi</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="flex items-start gap-4">
+                        <div class="contact-icon-wrap w-12 h-12 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="contact-title font-display font-semibold text-stone-100 mb-1">Alamat</h4>
+                            <p class="contact-text text-stone-400 font-light leading-relaxed">Jl. Kemang Raya No. 42<br>Kemang, Jakarta Selatan 12730</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="contact-icon-wrap w-12 h-12 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="contact-title font-display font-semibold text-stone-100 mb-1">Jam Buka</h4>
+                            <p class="contact-text text-stone-400 font-light leading-relaxed">Senin — Jumat: 07.00 — 22.00<br>Sabtu — Minggu: 08.00 — 23.00</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="contact-icon-wrap w-12 h-12 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="contact-title font-display font-semibold text-stone-100 mb-1">Telepon & WhatsApp</h4>
+                            <p class="contact-text text-stone-400 font-light">+62 812-3456-7890</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="contact-icon-wrap w-12 h-12 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="mail" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="contact-title font-display font-semibold text-stone-100 mb-1">Email</h4>
+                            <p class="contact-text text-stone-400 font-light">halo@brewverse.id</p>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <p class="social-label text-stone-500 text-xs font-bold uppercase tracking-widest mb-4" style="letter-spacing:0.1em;">Ikuti Kami</p>
+                        <div class="flex items-center gap-4">
+                            <a href="#" class="social-btn w-10 h-10 rounded-full bg-stone-900 border border-stone-800 hover:border-amber-900/40 flex items-center justify-center transition-colors duration-150 group">
+                                <i data-lucide="instagram" class="w-4 h-4 text-stone-400 group-hover:text-amber-500 transition-colors"></i>
+                            </a>
+                            <a href="#" class="social-btn w-10 h-10 rounded-full bg-stone-900 border border-stone-800 hover:border-amber-900/40 flex items-center justify-center transition-colors duration-150 group">
+                                <i data-lucide="twitter" class="w-4 h-4 text-stone-400 group-hover:text-amber-500 transition-colors"></i>
+                            </a>
+                            <a href="#" class="social-btn w-10 h-10 rounded-full bg-stone-900 border border-stone-800 hover:border-amber-900/40 flex items-center justify-center transition-colors duration-150 group">
+                                <svg class="w-4 h-4 text-stone-400 group-hover:text-amber-500 transition-colors" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                            </a>
+                            <a href="#" class="social-btn w-10 h-10 rounded-full bg-stone-900 border border-stone-800 hover:border-amber-900/40 flex items-center justify-center transition-colors duration-150 group">
+                                <i data-lucide="facebook" class="w-4 h-4 text-stone-400 group-hover:text-amber-500 transition-colors"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-wrap rounded-sm border border-stone-800 overflow-hidden h-[400px] md:h-full min-h-[400px]">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123456789!2d106.8140073!3d-6.2614914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTUnNDEuNCJTIDEwNsKwNDgnNTAuNCJF!5e0!3m2!1sid!2sid!4v1234567890" width="100%" height="100%" style="border:0; filter: grayscale(100%) invert(92%) contrast(83%);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="border-t border-white/5 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <span class="footer-logo font-display text-lg font-medium text-stone-100">BrewVerse</span>
+                <span class="footer-dot text-stone-600 text-sm">·</span>
+                <span class="footer-tagline text-stone-500 text-sm font-light">Kopi & Cerita</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#beranda" class="footer-link text-stone-500 text-sm hover:text-stone-300 transition-colors">Beranda</a>
+                <a href="#menu" class="footer-link text-stone-500 text-sm hover:text-stone-300 transition-colors">Menu</a>
+                <a href="#tentang" class="footer-link text-stone-500 text-sm hover:text-stone-300 transition-colors">Tentang</a>
+                <a href="#testimoni" class="footer-link text-stone-500 text-sm hover:text-stone-300 transition-colors">Testimoni</a>
+                <a href="#kontak" class="footer-link text-stone-500 text-sm hover:text-stone-300 transition-colors">Kontak</a>
+            </div>
+            <p class="footer-copy text-stone-600 text-xs">&copy; 2025 BrewVerse. Hak cipta dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- ======================== SCRIPTS ======================== -->
+    <script>
+        lucide.createIcons();
+
+        // ---- Theme System ----
+        const html = document.documentElement;
+        const iconMoon = document.getElementById('icon-moon');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoonM = document.getElementById('icon-moon-m');
+        const iconSunM = document.getElementById('icon-sun-m');
+
+        function getTheme() {
+            return localStorage.getItem('brewverse-theme') || 'dark';
+        }
+
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('brewverse-theme', theme);
+            if (theme === 'light') {
+                iconMoon.classList.add('hidden');
+                iconSun.classList.remove('hidden');
+                iconMoonM.classList.add('hidden');
+                iconSunM.classList.remove('hidden');
+            } else {
+                iconMoon.classList.remove('hidden');
+                iconSun.classList.add('hidden');
+                iconMoonM.classList.remove('hidden');
+                iconSunM.classList.add('hidden');
+            }
+        }
+
+        // Apply saved theme on load (before paint if possible)
+        applyTheme(getTheme());
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const next = getTheme() === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        });
+        document.getElementById('theme-toggle-mobile').addEventListener('click', () => {
+            const next = getTheme() === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        });
+
+        // ---- Mobile Menu Toggle ----
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+        let menuIsOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            menuIsOpen = !menuIsOpen;
+            mobileMenu.classList.toggle('open', menuIsOpen);
+            iconOpen.classList.toggle('hidden', menuIsOpen);
+            iconClose.classList.toggle('hidden', !menuIsOpen);
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuIsOpen = false;
+                mobileMenu.classList.remove('open');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            });
+        });
+
+        // ---- Navbar scroll ----
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                navbar.style.background = getTheme() === 'light'
+                    ? 'rgba(250,250,249,0.95)'
+                    : 'rgba(12,12,12,0.92)';
+                navbar.style.borderBottom = getTheme() === 'light'
+                    ? '1px solid #e7e5e4'
+                    : '1px solid rgba(255,255,255,0.05)';
+            } else {
+                navbar.style.background = getTheme() === 'light'
+                    ? 'rgba(250,250,249,0.88)'
+                    : 'rgba(12,12,12,0.6)';
+                navbar.style.borderBottom = getTheme() === 'light'
+                    ? '1px solid #e7e5e4'
+                    : 'none';
+            }
+        });
+
+        // ---- Menu Tabs ----
+        function switchTab(tabName) {
+            document.querySelectorAll('.menu-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById('panel-' + tabName).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-btn-active');
+                btn.classList.add('tab-btn-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.remove('tab-btn-inactive');
+            activeBtn.classList.add('tab-btn-active');
+        }
+
+        // ---- Toast ----
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ---- Scroll Reveal ----
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('section:not(:first-child)').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

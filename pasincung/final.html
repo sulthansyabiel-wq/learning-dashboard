@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Grid & Flexbox Inline</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header & Footer → CSS Grid */
+        header, footer {
+            display: grid;
+            place-items: center;
+            background: #0c7dff;
+            color: white;
+            padding: 20px;
+        }
+
+        /* Layout utama */
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 80vh;
+        }
+
+        /* Sidebar */
+        aside {
+            background: #356bac;
+            color: white;
+            padding: 20px;
+        }
+
+        /* Konten → Flexbox */
+        section {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .card {
+            flex: 1;
+            background: #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Header</h1>
+    </header>
+
+    <main class="layout">
+        <aside>
+            <p>Menu</p>
+            <ul>
+                <li>Home</li>
+                <li>Profil</li>
+                <li>Kontak</li>
+            </ul>
+        </aside>
+
+        <section>
+            <div class="card">Kartu 1</div>
+            <div class="card">Kartu 2</div>
+            <div class="card">Kartu 3</div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Footer</p>
+    </footer>
+
+</body>
+</html>

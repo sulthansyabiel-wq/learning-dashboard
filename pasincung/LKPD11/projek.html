@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>EduSmart Dashboard | Media Pembelajaran Interaktif</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #f9f9f8;
+            --surface: #ffffff;
+            --border: #e8e8e6;
+            --border-strong: #d0d0cc;
+            --text: #1a1a18;
+            --text-muted: #6b6b68;
+            --text-faint: #9b9b98;
+            --accent: #2d2d2b;
+            --accent-soft: #f0f0ee;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --green-border: #bbf7d0;
+            --blue: #1d4ed8;
+            --blue-bg: #eff6ff;
+            --blue-border: #bfdbfe;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --transition: 0.2s ease;
+        }
+
+        html.dark {
+            --bg: #101111;
+            --surface: #1c1c1a;
+            --border: #2a2a28;
+            --border-strong: #3a3a38;
+            --text: #f0f0ee;
+            --text-muted: #a0a09d;
+            --text-faint: #6b6b68;
+            --accent: #e0e0de;
+            --accent-soft: #222220;
+            --green: #4ade80;
+            --green-bg: #052e16;
+            --green-border: #14532d;
+            --blue: #93c5fd;
+            --blue-bg: #1e3a5f;
+            --blue-border: #1e40af;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .anim { animation: fadeUp 0.3s ease; }
+
+        /* ====== MODAL LOGIN ====== */
+        #loginModal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        .login-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            max-width: 400px; width: 100%;
+            padding: 32px 28px;
+        }
+        .login-icon {
+            width: 48px; height: 48px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .login-icon i { color: var(--bg); font-size: 20px; }
+        .login-box h2 { font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 4px; }
+        .login-box p { color: var(--text-muted); text-align: center; font-size: 13px; margin-bottom: 24px; }
+        .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+        .form-input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color var(--transition);
+        }
+        .form-input:focus { border-color: var(--border-strong); }
+        .form-group { margin-bottom: 14px; }
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity var(--transition);
+            margin-top: 4px;
+        }
+        .btn-primary:hover { opacity: 0.85; }
+        .login-hint { text-align: center; font-size: 12px; color: var(--text-faint); margin-top: 14px; }
+
+        /* ====== NAVBAR ====== */
+        nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 30;
+        }
+        .nav-inner {
+            max-width: 860px; margin: 0 auto;
+            padding: 0 20px;
+            height: 52px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; }
+        .logo-mark {
+            width: 32px; height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-mark i { color: var(--bg); font-size: 15px; }
+        .logo-name { font-size: 15px; font-weight: 600; color: var(--text); }
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+        .nav-username { font-size: 13px; color: var(--text-muted); }
+        .icon-btn {
+            width: 32px; height: 32px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .icon-btn:hover { background: var(--accent-soft); border-color: var(--border-strong); }
+        .logout-btn {
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .logout-btn:hover { color: #dc2626; border-color: #fca5a5; background: #fff5f5; }
+        html.dark .logout-btn:hover { background: #1a0505; border-color: #7f1d1d; }
+
+        /* ====== LAYOUT ====== */
+        #mainApp { display: none; }
+        .container { max-width: 860px; margin: 0 auto; padding: 24px 20px; }
+
+        /* ====== TABS ====== */
+        .tabs {
+            display: flex; gap: 2px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            padding: 8px 14px;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            margin-bottom: -1px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
+
+        /* ====== CARDS ====== */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 14px;
+        }
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .card-title i { font-size: 11px; }
+
+        /* ====== DASHBOARD ====== */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+        .stat-item {
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            text-align: center;
+        }
+        .stat-num { font-size: 22px; font-weight: 600; color: var(--text); }
+        .stat-lbl { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0 6px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--text);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .quote-box {
+            border-left: 2px solid var(--border-strong);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+            background: var(--accent-soft);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-top: 14px;
+        }
+
+        /* Mini profile */
+        .mini-profile {
+            display: flex; align-items: center; gap: 14px;
+        }
+        .avatar-sm {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .avatar-sm img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-sm .av-placeholder {
+            width: 100%; height: 100%;
+            background: var(--accent-soft);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+        .mini-info h3 { font-size: 15px; font-weight: 600; }
+        .mini-info p { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+        .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .view-portfolio-btn {
+            margin-top: 12px;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: transparent;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .view-portfolio-btn:hover { background: var(--accent-soft); color: var(--text); border-color: var(--border-strong); }
+
+        /* Recommendations */
+        .reco-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            transition: background var(--transition);
+        }
+        .reco-item:hover { background: var(--accent-soft); }
+        .reco-item span { flex: 1; font-size: 13px; color: var(--text); }
+        .reco-item i { font-size: 11px; color: var(--text-faint); }
+        .btn-small {
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-family: inherit; font-size: 11px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition);
+        }
+        .btn-small:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+        /* ====== MATERI ====== */
+        .materi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .materi-header {
+            padding: 16px 18px;
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+        }
+        .materi-title { font-size: 15px; font-weight: 600; }
+        .materi-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .toggle-btn {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-family: inherit; font-size: 12px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .toggle-btn:hover { border-color: var(--border-strong); background: var(--accent-soft); }
+        .toggle-btn.done {
+            background: var(--green-bg);
+            border-color: var(--green-border);
+            color: var(--green);
+        }
+        .materi-video { padding: 0 18px; }
+        .video-wrap {
+            aspect-ratio: 16/9;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #000;
+        }
+        .video-wrap iframe { width: 100%; height: 100%; display: block; }
+        .materi-body { padding: 12px 18px 16px; font-size: 13px; color: var(--text-muted); }
+
+        /* ====== PORTFOLIO ====== */
+        .portfolio-cover {
+            height: 80px;
+            background: var(--accent-soft);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        .portfolio-cover-stripes {
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(
+                90deg, var(--border) 0, var(--border) 1px, transparent 0, transparent 40px
+            );
+            opacity: 0.5;
+        }
+        .portfolio-body { padding: 0 20px 20px; }
+        .avatar-lg {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            border: 3px solid var(--surface);
+            overflow: hidden;
+            margin-top: -36px;
+            margin-bottom: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+        .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-lg .av-placeholder {
+            width: 100%; height: 100%;
+            background: var(--accent-soft);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            font-size: 24px;
+        }
+        .photo-overlay {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.45);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity var(--transition);
+        }
+        .avatar-lg:hover .photo-overlay { opacity: 1; }
+        .photo-overlay i { font-size: 14px; color: #fff; }
+        .photo-overlay span { font-size: 9px; color: #fff; margin-top: 2px; font-weight: 600; letter-spacing: 0.04em; }
+
+        .portfolio-name { font-size: 18px; font-weight: 600; }
+        .portfolio-title { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .portfolio-bio { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
+        .portfolio-meta {
+            display: flex; flex-wrap: wrap; gap: 12px;
+            margin-top: 12px;
+            font-size: 12px; color: var(--text-faint);
+        }
+        .portfolio-meta span { display: flex; align-items: center; gap: 4px; }
+
+        .edit-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            font-family: inherit;
+            font-size: 12px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .edit-btn:hover { background: var(--accent-soft); border-color: var(--border-strong); color: var(--text); }
+
+        .social-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            font-size: 12px; font-weight: 500;
+            color: var(--text-muted); text-decoration: none;
+            transition: all var(--transition);
+            margin-right: 6px; margin-top: 10px;
+        }
+        .social-link:hover { background: var(--accent-soft); border-color: var(--border-strong); color: var(--text); }
+
+        /* Skills */
+        .skill-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px; font-weight: 500;
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            margin: 3px;
+        }
+
+        /* Achievement grid */
+        .achieve-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        @media (max-width: 480px) { .achieve-grid { grid-template-columns: repeat(2, 1fr); } }
+        .achieve-item {
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .achieve-num { font-size: 20px; font-weight: 600; color: var(--text); }
+        .achieve-lbl { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+
+        /* Progress list */
+        .prog-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .prog-item.done { background: var(--green-bg); color: var(--green); }
+        .prog-item.pending { background: var(--accent-soft); color: var(--text-muted); }
+        .prog-dot {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 10px;
+        }
+        .prog-dot.done { background: var(--green); color: #fff; }
+        .prog-dot.pending { background: var(--border); color: var(--text-faint); }
+        .xp-badge {
+            margin-left: auto;
+            font-size: 10px; font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: var(--green-border);
+            color: var(--green);
+        }
+
+        /* Projects */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+        .project-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            background: var(--surface);
+            transition: border-color var(--transition);
+            position: relative;
+        }
+        .project-card:hover { border-color: var(--border-strong); }
+        .project-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .project-card p { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+        .project-tag {
+            font-size: 10px; padding: 2px 7px;
+            border-radius: 10px;
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            color: var(--text-faint);
+        }
+        .project-icon { font-size: 18px; color: var(--text-faint); margin-bottom: 8px; }
+        .del-btn {
+            position: absolute; top: 8px; right: 8px;
+            width: 20px; height: 20px;
+            border: none; background: none;
+            color: var(--text-faint); cursor: pointer;
+            font-size: 11px;
+            opacity: 0; transition: opacity var(--transition);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .project-card:hover .del-btn { opacity: 1; }
+        .del-btn:hover { color: #dc2626; }
+
+        .add-project-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 10px;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            font-family: inherit; font-size: 12px;
+            color: var(--text-faint); cursor: pointer;
+            transition: all var(--transition);
+        }
+        .add-project-btn:hover { border-color: var(--border-strong); color: var(--text); background: var(--accent-soft); }
+
+        /* ====== EDIT MODAL ====== */
+        #editPortfolioModal {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        #editPortfolioModal.open { display: flex; }
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            width: 100%; max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 18px;
+        }
+        .modal-header h3 { font-size: 15px; font-weight: 600; }
+        .modal-close {
+            width: 28px; height: 28px;
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            background: none; cursor: pointer; color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; transition: all var(--transition);
+        }
+        .modal-close:hover { background: var(--accent-soft); color: var(--text); }
+        .modal-field { margin-bottom: 12px; }
+        .modal-field label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; }
+        .modal-field input, .modal-field textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit; font-size: 13px;
+            outline: none;
+            transition: border-color var(--transition);
+            resize: vertical;
+        }
+        .modal-field input:focus, .modal-field textarea:focus { border-color: var(--border-strong); }
+        .modal-footer { display: flex; gap: 8px; margin-top: 16px; }
+        .btn-cancel {
+            flex: 1; padding: 9px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            font-family: inherit; font-size: 13px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition);
+        }
+        .btn-cancel:hover { background: var(--accent-soft); }
+        .btn-save {
+            flex: 1; padding: 9px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: var(--bg);
+            font-family: inherit; font-size: 13px; font-weight: 500;
+            cursor: pointer;
+            transition: opacity var(--transition);
+        }
+        .btn-save:hover { opacity: 0.85; }
+
+        #profilePhotoInput { display: none; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 520px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .nav-username { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal">
+    <div class="login-box">
+        <div class="login-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h2>Selamat Datang</h2>
+        <p>Masuk untuk melanjutkan belajar</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="loginUsername">Username / Email</label>
+                <input type="text" id="loginUsername" class="form-input" placeholder="contoh: Sulthan" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fas fa-arrow-right" style="font-size:12px;margin-right:6px;"></i> Masuk</button>
+        </form>
+        <p class="login-hint">Login: username <strong>Sulthan</strong> · password <strong>password</strong></p>
+    </div>
+</div>
+
+<!-- EDIT PORTFOLIO MODAL -->
+<div id="editPortfolioModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Edit Profil</h3>
+            <button class="modal-close" onclick="closeEditModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-field">
+            <label>Nama Lengkap</label>
+            <input type="text" id="editName" placeholder="Nama kamu">
+        </div>
+        <div class="modal-field">
+            <label>Gelar / Posisi</label>
+            <input type="text" id="editTitle" placeholder="Contoh: Frontend Developer">
+        </div>
+        <div class="modal-field">
+            <label>Bio Singkat</label>
+            <textarea id="editBio" rows="3" placeholder="Ceritakan tentang dirimu..."></textarea>
+        </div>
+        <div class="modal-field">
+            <label>Lokasi</label>
+            <input type="text" id="editLocation" placeholder="Contoh: Jakarta, Indonesia">
+        </div>
+        <div class="modal-field">
+            <label>GitHub URL</label>
+            <input type="text" id="editGithub" placeholder="https://github.com/username">
+        </div>
+        <div class="modal-field">
+            <label>LinkedIn URL</label>
+            <input type="text" id="editLinkedin" placeholder="https://linkedin.com/in/username">
+        </div>
+        <div class="modal-field">
+            <label>Skills (pisahkan dengan koma)</label>
+            <input type="text" id="editSkills" placeholder="HTML, CSS, JavaScript, React">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeEditModal()">Batal</button>
+            <button class="btn-save" onclick="savePortfolioEdit()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <div class="logo-mark"><i class="fas fa-chalkboard-user"></i></div>
+                <span class="logo-name">EduSmart</span>
+            </div>
+            <div class="nav-right">
+                <span id="userNameDisplay" class="nav-username"></span>
+                <button id="darkModeToggle" class="icon-btn" title="Toggle dark mode">
+                    <i id="darkModeIcon" class="fas fa-moon"></i>
+                </button>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt" style="margin-right:4px;font-size:11px;"></i>Keluar</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="tabs">
+            <button id="dashboardTab" class="tab-btn active">
+                <i class="fas fa-tachometer-alt" style="font-size:11px;"></i> Dashboard
+            </button>
+            <button id="materiTab" class="tab-btn">
+                <i class="fas fa-book-open" style="font-size:11px;"></i> Materi Belajar
+            </button>
+            <button id="portfolioTab" class="tab-btn">
+                <i class="fas fa-id-card" style="font-size:11px;"></i> Portofolio
+            </button>
+        </div>
+        <div id="contentContainer" class="anim"></div>
+    </div>
+</div>
+
+<input type="file" id="profilePhotoInput" accept="image/*">
+
+<script>
+let isLoggedIn = false;
+let currentUser = { username: "", fullName: "", id: 1 };
+let userXP = 0;
+let completedLessons = [false, false, false, false, false];
+let darkMode = localStorage.getItem("darkMode") === "true";
+let currentActiveTab = "dashboard";
+
+let portfolioData = {
+    photo: null,
+    name: "",
+    title: "Web Developer · Pelajar EduSmart",
+    bio: "Saya adalah pelajar yang bersemangat belajar teknologi web modern. Suka membangun proyek yang bermanfaat dan terus berkembang setiap hari.",
+    location: "Indonesia",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com",
+    skills: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "React.js"],
+    projects: [
+        { title: "Personal Blog", desc: "Blog pribadi dibangun dengan HTML & CSS modern.", tags: ["HTML","CSS"], icon: "fas fa-blog" },
+        { title: "Todo App", desc: "Aplikasi manajemen tugas interaktif dengan JavaScript.", tags: ["JS","DOM"], icon: "fas fa-check-square" },
+        { title: "UI Component", desc: "Koleksi komponen UI menggunakan Tailwind CSS.", tags: ["Tailwind","UI"], icon: "fas fa-palette" }
+    ]
+};
+
+const materiList = [
+    { id: 1, title: "Pengenalan HTML5", desc: "Pelajari struktur dasar web dengan semantic HTML.", videoUrl: "https://www.youtube.com/embed/UB1O30fR-EE", content: "HTML5 adalah bahasa markup untuk membuat struktur halaman web." },
+    { id: 2, title: "CSS Modern (Flexbox & Grid)", desc: "Tata letak responsif menggunakan Flexbox dan Grid.", videoUrl: "https://www.youtube.com/embed/3YW65K6LcIA", content: "CSS Grid dan Flexbox memudahkan layout modern." },
+    { id: 3, title: "JavaScript ES6+", desc: "Fitur modern JavaScript: arrow function, destructuring, modules.", videoUrl: "https://www.youtube.com/embed/NCwa_xi0Uuc", content: "JavaScript ES6 memperkenalkan sintaks yang lebih powerful." },
+    { id: 4, title: "Tailwind CSS Framework", desc: "Utility-first CSS untuk mempercepat styling.", videoUrl: "https://www.youtube.com/embed/lCxcTsOHrjo", content: "Tailwind CSS membuat desain cepat dan konsisten." },
+    { id: 5, title: "React.js Dasar", desc: "Membangun UI interaktif dengan komponen.", videoUrl: "https://www.youtube.com/embed/SqcY0GlETPk", content: "React library untuk frontend modern." }
+];
+
+const localAccounts = [
+    { username: "Sulthan", password: "password", user: { id: 1, username: "Sulthan", fullName: "Sulthan", email: "sulthan@demo.com" } },
+    { username: "sulthan", password: "password", user: { id: 1, username: "Sulthan", fullName: "Sulthan", email: "sulthan@demo.com" } },
+    { username: "student", password: "password", user: { id: 999, username: "student", fullName: "Student Demo", email: "student@demo.com" } },
+];
+
+function updateXPAndProgress() {
+    const completedCount = completedLessons.filter(v => v === true).length;
+    userXP = completedCount * 20;
+    localStorage.setItem(`userXP_${currentUser.id}`, userXP);
+    localStorage.setItem(`completed_${currentUser.id}`, JSON.stringify(completedLessons));
+}
+
+function loadUserProgress() {
+    const savedXP = localStorage.getItem(`userXP_${currentUser.id}`);
+    if (savedXP !== null) userXP = parseInt(savedXP); else userXP = 0;
+    const savedLessons = localStorage.getItem(`completed_${currentUser.id}`);
+    if (savedLessons) {
+        try { const arr = JSON.parse(savedLessons); if (Array.isArray(arr) && arr.length === 5) completedLessons = arr; } catch(e) {}
+    }
+    const cc = completedLessons.filter(v=>v===true).length;
+    if (userXP !== cc * 20) userXP = cc * 20;
+    const savedPortfolio = localStorage.getItem(`portfolio_${currentUser.id}`);
+    if (savedPortfolio) { try { portfolioData = { ...portfolioData, ...JSON.parse(savedPortfolio) }; } catch(e) {} }
+    if (!portfolioData.name) portfolioData.name = "Sulthan";
+    updateXPAndProgress();
+}
+
+function saveProgress() { updateXPAndProgress(); }
+
+function toggleMateri(index, isComplete) {
+    if (index >= 0 && index < completedLessons.length) {
+        completedLessons[index] = isComplete;
+        saveProgress();
+        if (currentActiveTab === 'materi') renderMateriPage();
+        if (currentActiveTab === 'dashboard') renderDashboard();
+    }
+}
+
+function savePortfolioData() {
+    localStorage.setItem(`portfolio_${currentUser.id}`, JSON.stringify(portfolioData));
+}
+
+async function loginWithAPI(username, password) {
+    const local = localAccounts.find(a => a.username === username && a.password === password);
+    if (local) return { success: true, user: local.user };
+    try {
+        const response = await fetch('https://dummyjson.com/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, expiresInMins: 30 })
+        });
+        const data = await response.json();
+        if (response.ok && data.id) {
+            return { success: true, user: { id: data.id, username: data.username, fullName: data.firstName + ' ' + data.lastName, email: data.email } };
+        } else { return { success: false, message: "Username atau password salah" }; }
+    } catch(error) {
+        return { success: false, message: "Koneksi error. Gunakan username 'Sulthan' password 'password'" };
+    }
+}
+
+async function fetchQuoteFromAPI() {
+    try {
+        const response = await fetch('https://dummyjson.com/quotes/random');
+        const data = await response.json();
+        const el = document.getElementById("randomQuote");
+        if (el) el.innerText = `"${data.quote}" — ${data.author}`;
+    } catch(e) {
+        const el = document.getElementById("randomQuote");
+        if (el) el.innerText = "Belajar hari ini, sukses esok hari.";
+    }
+}
+
+function renderDashboard() {
+    const container = document.getElementById("contentContainer");
+    const completedCount = completedLessons.filter(v=>v===true).length;
+    const level = Math.floor(userXP / 100) + 1;
+    const xpNeededNext = (Math.floor(userXP / 100) + 1) * 100 - userXP;
+    const progressPercent = Math.min((userXP / 500) * 100, 100);
+
+    const recos = materiList.filter((_,idx) => !completedLessons[idx]).slice(0,2);
+    const allDone = completedLessons.every(v=>v===true);
+
+    container.innerHTML = `
+    <div class="card">
+        <div class="card-title"><i class="fas fa-bolt"></i> Progres Belajar</div>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-num">${userXP}</div>
+                <div class="stat-lbl">Total XP</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">${level}</div>
+                <div class="stat-lbl">Level</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">${completedCount}/5</div>
+                <div class="stat-lbl">Selesai</div>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:${progressPercent}%"></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-faint);">Level ${level} · ${xpNeededNext > 0 ? `${xpNeededNext} XP lagi ke level ${level+1}` : 'Level Max!'}</p>
+        <div class="quote-box">
+            <span id="randomQuote">Memuat kutipan...</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><i class="fas fa-user"></i> Profil Singkat</div>
+        <div class="mini-profile">
+            <div class="avatar-sm">
+                ${portfolioData.photo
+                    ? `<img src="${portfolioData.photo}" alt="foto">`
+                    : `<div class="av-placeholder"><i class="fas fa-user"></i></div>`}
+            </div>
+            <div class="mini-info">
+                <h3>${portfolioData.name || currentUser.fullName}</h3>
+                <p>${portfolioData.title}</p>
+                <p style="font-size:11px;color:var(--text-faint);margin-top:2px;"><i class="fas fa-map-marker-alt" style="font-size:10px;margin-right:3px;"></i>${portfolioData.location}</p>
+            </div>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:10px;line-height:1.6;">${portfolioData.bio.substring(0, 100)}${portfolioData.bio.length > 100 ? '...' : ''}</p>
+        <div class="tag-row">
+            ${portfolioData.skills.slice(0,4).map(s => `<span class="tag">${s}</span>`).join('')}
+            ${portfolioData.skills.length > 4 ? `<span class="tag">+${portfolioData.skills.length - 4}</span>` : ''}
+        </div>
+        <button class="view-portfolio-btn" onclick="setActiveTab('portfolio')">
+            <i class="fas fa-id-card" style="font-size:11px;"></i> Lihat Portofolio
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><i class="fas fa-compass"></i> Lanjutkan Belajar</div>
+        ${allDone
+            ? `<p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--green);margin-right:6px;"></i>Kamu sudah menyelesaikan semua materi!</p>`
+            : recos.map(m => `
+            <div class="reco-item">
+                <i class="fas fa-play-circle" style="font-size:13px;color:var(--text-faint);"></i>
+                <span>${m.title}</span>
+                <button class="btn-small" onclick="window.switchToMateriAndScroll(${m.id-1})">Mulai</button>
+            </div>`).join('')
+        }
+    </div>`;
+
+    fetchQuoteFromAPI();
+}
+
+function renderMateriPage() {
+    const container = document.getElementById("contentContainer");
+    let html = `<div>`;
+    materiList.forEach((materi, idx) => {
+        const isCompleted = completedLessons[idx];
+        html += `
+        <div id="materi-card-${idx}" class="materi-card">
+            <div class="materi-header">
+                <div>
+                    <div class="materi-title">${materi.title}</div>
+                    <div class="materi-desc">${materi.desc}</div>
+                </div>
+                <button data-idx="${idx}" class="toggle-complete-btn toggle-btn ${isCompleted ? 'done' : ''}">
+                    ${isCompleted ? '<i class="fas fa-check" style="font-size:11px;margin-right:4px;"></i> Selesai' : '<i class="far fa-circle" style="font-size:11px;margin-right:4px;"></i> Tandai'}
+                </button>
+            </div>
+            <div class="materi-video">
+                <div class="video-wrap">
+                    <iframe src="${materi.videoUrl}" title="${materi.title}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="materi-body">${materi.content}</div>
+        </div>`;
+    });
+    html += `<div class="card" style="text-align:center;">
+        <p style="font-size:13px;color:var(--text-muted);">Selesaikan semua materi untuk mendapatkan total 100 XP</p>
+    </div></div>`;
+    container.innerHTML = html;
+
+    document.querySelectorAll(".toggle-complete-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-idx"));
+            if (!isNaN(idx)) toggleMateri(idx, !completedLessons[idx]);
+        });
+    });
+}
+
+function renderPortfolioPage() {
+    const container = document.getElementById("contentContainer");
+    const completedCount = completedLessons.filter(v=>v===true).length;
+    const level = Math.floor(userXP / 100) + 1;
+
+    container.innerHTML = `
+    <div>
+        <!-- Profile -->
+        <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px;">
+            <div class="portfolio-cover"><div class="portfolio-cover-stripes"></div></div>
+            <div class="portfolio-body">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+                    <div class="avatar-lg" onclick="document.getElementById('profilePhotoInput').click()">
+                        ${portfolioData.photo
+                            ? `<img src="${portfolioData.photo}" id="profilePhotoImg" alt="foto">`
+                            : `<div class="av-placeholder"><i class="fas fa-user"></i></div>`}
+                        <div class="photo-overlay"><i class="fas fa-camera"></i><span>GANTI</span></div>
+                    </div>
+                    <button class="edit-btn" onclick="openEditModal()" style="margin-top:8px;">
+                        <i class="fas fa-pen" style="font-size:11px;"></i> Edit Profil
+                    </button>
+                </div>
+                <div class="portfolio-name">${portfolioData.name || currentUser.fullName}</div>
+                <div class="portfolio-title">${portfolioData.title}</div>
+                <div class="portfolio-bio">${portfolioData.bio}</div>
+                <div class="portfolio-meta">
+                    <span><i class="fas fa-map-marker-alt" style="font-size:10px;"></i>${portfolioData.location}</span>
+                    <span><i class="fas fa-star" style="font-size:10px;"></i>${userXP} XP · Level ${level}</span>
+                    <span><i class="fas fa-book-open" style="font-size:10px;"></i>${completedCount}/5 Materi</span>
+                </div>
+                <div>
+                    ${portfolioData.github ? `<a href="${portfolioData.github}" target="_blank" class="social-link"><i class="fab fa-github" style="font-size:12px;"></i> GitHub</a>` : ''}
+                    ${portfolioData.linkedin ? `<a href="${portfolioData.linkedin}" target="_blank" class="social-link"><i class="fab fa-linkedin" style="font-size:12px;"></i> LinkedIn</a>` : ''}
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-code"></i> Skills & Teknologi</div>
+            <div>
+                ${portfolioData.skills.map(s => `<span class="skill-pill"><i class="fas fa-check" style="font-size:9px;"></i>${s}</span>`).join('')}
+                ${portfolioData.skills.length === 0 ? '<p style="font-size:12px;color:var(--text-faint);font-style:italic;">Belum ada skill. Edit profil untuk menambahkan.</p>' : ''}
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-trophy"></i> Pencapaian Belajar</div>
+            <div class="achieve-grid">
+                <div class="achieve-item"><div class="achieve-num">${userXP}</div><div class="achieve-lbl">Total XP</div></div>
+                <div class="achieve-item"><div class="achieve-num">${level}</div><div class="achieve-lbl">Level</div></div>
+                <div class="achieve-item"><div class="achieve-num">${completedCount}</div><div class="achieve-lbl">Materi Lulus</div></div>
+                <div class="achieve-item"><div class="achieve-num">${Math.floor(userXP/100)}</div><div class="achieve-lbl">Badge</div></div>
+            </div>
+            <div style="margin-top:14px;">
+                ${materiList.map((m, idx) => `
+                <div class="prog-item ${completedLessons[idx] ? 'done' : 'pending'}">
+                    <div class="prog-dot ${completedLessons[idx] ? 'done' : 'pending'}">
+                        <i class="fas ${completedLessons[idx] ? 'fa-check' : 'fa-lock'}"></i>
+                    </div>
+                    <span style="font-size:13px;">${m.title}</span>
+                    ${completedLessons[idx] ? '<span class="xp-badge">+20 XP</span>' : ''}
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <div class="card-title" style="margin-bottom:0;"><i class="fas fa-folder-open"></i> Proyek</div>
+                <button class="add-project-btn" onclick="addProject()"><i class="fas fa-plus" style="font-size:10px;"></i> Tambah</button>
+            </div>
+            <div class="projects-grid" id="projectsGrid">${renderProjectCards()}</div>
+            ${portfolioData.projects.length === 0 ? '<p style="font-size:12px;color:var(--text-faint);text-align:center;padding:12px 0;font-style:italic;">Belum ada proyek.</p>' : ''}
+        </div>
+    </div>`;
+
+    document.getElementById('profilePhotoInput').onchange = handlePhotoUpload;
+}
+
+function renderProjectCards() {
+    return portfolioData.projects.map((p, i) => `
+        <div class="project-card">
+            <button class="del-btn" onclick="removeProject(${i})"><i class="fas fa-times"></i></button>
+            <div class="project-icon"><i class="${p.icon || 'fas fa-code'}"></i></div>
+            <h4>${p.title}</h4>
+            <p>${p.desc}</p>
+            <div class="project-tags">
+                ${(p.tags || []).map(t => `<span class="project-tag">${t}</span>`).join('')}
+            </div>
+        </div>`).join('');
+}
+
+function removeProject(idx) {
+    if (confirm("Hapus proyek ini?")) {
+        portfolioData.projects.splice(idx, 1);
+        savePortfolioData();
+        const grid = document.getElementById("projectsGrid");
+        if (grid) grid.innerHTML = renderProjectCards();
+    }
+}
+
+function addProject() {
+    const title = prompt("Nama proyek:");
+    if (!title) return;
+    const desc = prompt("Deskripsi singkat:") || "";
+    const tags = (prompt("Tags (pisahkan koma):") || "").split(',').map(t=>t.trim()).filter(Boolean);
+    portfolioData.projects.push({ title, desc, tags, icon: "fas fa-code" });
+    savePortfolioData();
+    const grid = document.getElementById("projectsGrid");
+    if (grid) grid.innerHTML = renderProjectCards();
+}
+
+function handlePhotoUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert("File harus berupa gambar!"); return; }
+    if (file.size > 3 * 1024 * 1024) { alert("Ukuran gambar maksimal 3MB!"); return; }
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        portfolioData.photo = ev.target.result;
+        savePortfolioData();
+        if (currentActiveTab === 'portfolio') renderPortfolioPage();
+        if (currentActiveTab === 'dashboard') renderDashboard();
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+}
+
+function openEditModal() {
+    document.getElementById('editName').value = portfolioData.name || '';
+    document.getElementById('editTitle').value = portfolioData.title || '';
+    document.getElementById('editBio').value = portfolioData.bio || '';
+    document.getElementById('editLocation').value = portfolioData.location || '';
+    document.getElementById('editGithub').value = portfolioData.github || '';
+    document.getElementById('editLinkedin').value = portfolioData.linkedin || '';
+    document.getElementById('editSkills').value = portfolioData.skills.join(', ');
+    document.getElementById('editPortfolioModal').classList.add('open');
+}
+
+function closeEditModal() {
+    document.getElementById('editPortfolioModal').classList.remove('open');
+}
+
+function savePortfolioEdit() {
+    portfolioData.name = document.getElementById('editName').value.trim() || portfolioData.name;
+    portfolioData.title = document.getElementById('editTitle').value.trim() || portfolioData.title;
+    portfolioData.bio = document.getElementById('editBio').value.trim() || portfolioData.bio;
+    portfolioData.location = document.getElementById('editLocation').value.trim() || portfolioData.location;
+    portfolioData.github = document.getElementById('editGithub').value.trim();
+    portfolioData.linkedin = document.getElementById('editLinkedin').value.trim();
+    portfolioData.skills = document.getElementById('editSkills').value.split(',').map(s=>s.trim()).filter(Boolean);
+    savePortfolioData();
+    closeEditModal();
+    if (currentActiveTab === 'portfolio') renderPortfolioPage();
+    if (currentActiveTab === 'dashboard') renderDashboard();
+}
+
+document.getElementById('editPortfolioModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+});
+
+function applyDarkMode() {
+    const htmlEl = document.documentElement;
+    const icon = document.getElementById("darkModeIcon");
+    if (darkMode) {
+        htmlEl.classList.add('dark');
+        if (icon) { icon.classList.remove("fa-moon"); icon.classList.add("fa-sun"); }
+    } else {
+        htmlEl.classList.remove('dark');
+        if (icon) { icon.classList.remove("fa-sun"); icon.classList.add("fa-moon"); }
+    }
+    localStorage.setItem("darkMode", darkMode);
+}
+
+function toggleDarkMode() { darkMode = !darkMode; applyDarkMode(); }
+
+function setActiveTab(tab) {
+    currentActiveTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    const tabMap = { dashboard: 'dashboardTab', materi: 'materiTab', portfolio: 'portfolioTab' };
+    const el = document.getElementById(tabMap[tab]);
+    if (el) el.classList.add('active');
+
+    const container = document.getElementById("contentContainer");
+    if (container) { container.className = 'anim'; void container.offsetWidth; container.className = 'anim'; }
+
+    if (tab === 'dashboard') renderDashboard();
+    else if (tab === 'materi') renderMateriPage();
+    else if (tab === 'portfolio') renderPortfolioPage();
+}
+
+window.switchToMateriAndScroll = (index) => {
+    setActiveTab('materi');
+    setTimeout(() => {
+        const card = document.getElementById(`materi-card-${index}`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+};
+
+async function handleLogin(event) {
+    event.preventDefault();
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    if (!username || !password) { alert("Harap masukkan username dan password!"); return; }
+    const loginBtn = document.querySelector("#loginForm button");
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:12px;margin-right:6px;"></i> Memproses...';
+    loginBtn.disabled = true;
+    const result = await loginWithAPI(username, password);
+    if (result.success) {
+        currentUser = result.user;
+        const nameDisplay = document.getElementById("userNameDisplay");
+        if (nameDisplay) nameDisplay.innerText = currentUser.fullName || currentUser.username;
+        isLoggedIn = true;
+        loadUserProgress();
+        document.getElementById("loginModal").classList.add("hidden");
+        document.getElementById("mainApp").style.display = "block";
+        setActiveTab("dashboard");
+        applyDarkMode();
+    } else {
+        alert("Login gagal: " + (result.message || "Periksa kembali username/password"));
+    }
+    loginBtn.innerHTML = originalText;
+    loginBtn.disabled = false;
+}
+
+function logout() {
+    isLoggedIn = false;
+    document.getElementById("mainApp").style.display = "none";
+    document.getElementById("loginModal").classList.remove("hidden");
+    document.getElementById("loginForm")?.reset();
+}
+
+document.getElementById("loginForm")?.addEventListener("submit", handleLogin);
+document.getElementById("logoutBtn")?.addEventListener("click", logout);
+document.getElementById("darkModeToggle")?.addEventListener("click", toggleDarkMode);
+document.getElementById("dashboardTab")?.addEventListener("click", () => setActiveTab("dashboard"));
+document.getElementById("materiTab")?.addEventListener("click", () => setActiveTab("materi"));
+document.getElementById("portfolioTab")?.addEventListener("click", () => setActiveTab("portfolio"));
+document.getElementById("profilePhotoInput")?.addEventListener("change", handlePhotoUpload);
+
+if (darkMode) {
+    document.documentElement.classList.add('dark');
+    const icon = document.getElementById("darkModeIcon");
+    if (icon) { icon.classList.remove("fa-moon"); icon.classList.add("fa-sun"); }
+}
+
+window.toggleMateri = toggleMateri;
+window.setActiveTab = setActiveTab;
+window.openEditModal = openEditModal;
+window.closeEditModal = closeEditModal;
+window.savePortfolioEdit = savePortfolioEdit;
+window.addProject = addProject;
+window.removeProject = removeProject;
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Responsif</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #00796b, #004d40);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            flex: 1;
+        }
+
+        nav {
+            background: #00acc1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        nav button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #e3f2fd;
+            transition: 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+
+        nav button:hover {
+            background: #bbdefb;
+            transform: scale(1.02);
+        }
+
+        main {
+            padding: 25px;
+            margin: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+       @media (max-width: 768px) {
+
+    .wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        width: 100%;
+        padding: 15px;
+    }
+
+    nav button {
+        padding: 20px;
+        font-size: 16px;
+    }
+
+    main {
+        margin: 10px;
+        padding: 15px;
+    }
+
+}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>MEDIA PEMBELAJARAN</h1>
+</header>
+
+<div class="wrapper">
+    <nav id="sidebar">
+        <button onclick="loadContent('home')">Menu Utama</button>
+        <button onclick="loadContent('kuis')">Latihan Soal</button>
+        <button onclick="loadContent('profil')">Profil</button>
+    </nav>
+
+    <main id="konten">
+        <h2>Selamat Datang</h2>
+        <p>Silakan pilih menu untuk memulai.</p>
+    </main>
+</div>
+
+<script>
+    function loadContent(menu) {
+        const konten = document.getElementById('konten');
+
+        if (menu === 'kuis') {
+            konten.innerHTML = `
+                <h2>Latihan Soal</h2>
+                <form id="quizForm" style="display:flex; flex-direction:column; gap:15px;">
+                    <input 
+                        type="text" 
+                        id="nama" 
+                        placeholder="Masukkan Nama Anda" 
+                        style="padding:10px;" 
+                        required
+                    >
+                    <p><strong>1. Apa itu 2 Dimensi?</strong></p>
+                    <div>
+                        <label>
+                            <input type="radio" name="q1" value="benar">
+                            Objek dengan panjang dan lebar
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="q1" value="salah">
+                            Objek dengan volume
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button 
+                            type="button" 
+                            onclick="hitungSkor()" 
+                            style="background:#00796b; color:white;"
+                        >
+                            Kirim
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="resetForm()" 
+                            style="background:#e53935; color:white;"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            `;
+        } else {
+            konten.innerHTML = `
+                <h2>${menu.toUpperCase()}</h2>
+                <p>Ini adalah konten untuk ${menu}.</p>
+            `;
+        }
+    }
+
+    function hitungSkor() {
+        const nama = document.getElementById("nama").value;
+
+        if (!nama) {
+            alert("Nama tidak boleh kosong!");
+            return;
+        }
+
+        const jawaban = document.querySelector('input[name="q1"]:checked');
+
+        if (!jawaban) {
+            alert("Pilih jawaban dulu!");
+            return;
+        }
+
+        const score = (jawaban.value === 'benar') ? 100 : 0;
+
+        alert("Halo " + nama + ", Skor Anda: " + score);
+    }
+
+    function resetForm() {
+        document.getElementById("quizForm").reset();
+    }
+</script>
+
+</body>
+</html>

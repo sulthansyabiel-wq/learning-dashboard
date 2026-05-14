@@ -1,0 +1,87 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  background-color: #0b26af;
+}
+
+header {
+  background-color: #0b26af;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #012951;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- Layout Desktop (Default: 3 Kolom) --- */
+.container {
+  display: flex;
+  flex-wrap: wrap; /* Penting agar bisa turun ke bawah */
+  padding: 20px;
+  gap: 20px; /* Jarak antar card */
+  max-width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.box {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  /* Perhitungan: (100% / 3) - sisa gap */
+  flex: 1 1 calc(33.33% - 20px); 
+  box-sizing: border-box;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #1e37b5;
+  color: white;
+  margin-top: 20px;
+}
+
+/* --- Media Queries --- */
+
+/* 1. Tablet (Maksimal 992px): 2 Card di atas, 1 Card di bawah */
+@media (max-width: 992px) {
+  .box {
+    /* (100% / 2) - sisa gap */
+    flex: 1 1 calc(50% - 20px);
+  }
+
+  /* Membuat card terakhir memenuhi lebar bawah sendiri */
+  .box:last-child {
+    flex: 1 1 100%;
+  }
+}
+
+/* 2. Mobile (Lebar maksimal 480px) */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  nav {
+    flex-direction: column; /* Menu navigasi berjejer vertikal */
+    align-items: center;
+  }
+  .box {
+    flex: 1 1 100%; /* Berubah menjadi 1 Kolom penuh */
+  }
+}
